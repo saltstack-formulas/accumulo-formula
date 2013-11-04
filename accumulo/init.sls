@@ -87,7 +87,7 @@ ssh_dss_{{ username }}:
 
 {{ userhome }}/.ssh/config:
   file.managed:
-    - source: salt://misc/ssh_config
+    - source: salt://accumulo/conf/ssh/ssh_config
     - user: {{ username }}
     - group: {{ username }}
     - mode: 644
