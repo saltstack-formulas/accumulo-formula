@@ -1,2 +1,3 @@
 accumulo/files/dsa-*
+accumulo/files/*gz
 .idea

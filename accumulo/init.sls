@@ -1,9 +1,29 @@
 {%- set accumulo_user_defaults = {'accumulo':'6040'} %}
-{%- set accumulo = pillar.get('accumulo', {}) %}
+{%- set accumulo = salt['pillar.get']('accumulo', {}) %}
 {%- set accumulo_users = accumulo.get('users', {}) %}
+{%- set version = accumulo.get('version', '1.5.0') %}
+{%- set alt_home  = salt['pillar.get']('accumulo:prefix', '/usr/lib/accumulo') %}
+{%- set real_home = alt_home + '-' + version %}
+{%- set accumulo_tgz = "accumulo-" + version + "-bin.tar.gz" %}
+{%- set accumulo_tgz_path = '/tmp/' + accumulo_tgz %}
+{%- set alt_config = salt['pillar.get']('accumulo:config:directory', '/etc/accumulo/conf') %}
+{%- set real_config = alt_config + '-' + version %}
+{%- set real_config_src = real_home + '/conf' %}
+{%- set real_config_dist = alt_config + '.dist' %}
+{%- set hadoop_prefix  = salt['pillar.get']('hadoop:prefix', '/usr/lib/hadoop') %}
+{%- set hadoop_version = salt['pillar.get']('hadoop:version', '1.2.1') %}
+{%- set hadoop_major   = hadoop_version.split('.')|first() %}
+
+{%- set zookeeper_prefix  = salt['pillar.get']('zookeeper:prefix', '/usr/lib/zookeeper') %}
+{%- set namenode_host = salt['mine.get']('roles:hadoop_master', 'network.interfaces', 'grain').keys()|first() %}
+{%- set zookeeper_host = namenode_host %}
+
+{%- set accumulo_master = salt['mine.get']('roles:accumulo_master', 'network.interfaces', 'grain').keys()|first() %}
+{%- set accumulo_slaves = salt['mine.get']('roles:accumulo_slave', 'network.interfaces', 'grain').keys() %}
+
 
 include:
-  - hadoop.prereqs
+  - hadoop
 
 {% for username, default_uid in accumulo_user_defaults.items() %}
 
@@ -80,3 +100,79 @@ ssh_dss_{{ username }}:
       - export PATH=$PATH:/usr/lib/hadoop/bin:/usr/lib/hadoop/sbin:/usr/lib/accumulo
 
 {% endfor %}
+
+# hopefully the tarball is on the master
+{{ accumulo_tgz_path }}:
+  file.managed:
+    - source: salt://accumulo/files/{{ accumulo_tgz }}
+
+install-accumulo-dist:
+  cmd.run:
+    - name: tar xzf {{ accumulo_tgz_path }}
+    - cwd: /usr/lib
+    - unless: test -d {{ real_home }}/lib
+    - require:
+      - file.managed: {{ accumulo_tgz_path }}
+  alternatives.install:
+    - name: accumulo-home-link
+    - link: {{ alt_home }}
+    - path: {{ real_home }}
+    - priority: 30
+    - require:
+      - cmd.run: install-accumulo-dist
+  file.directory:
+    - name: {{ real_home }}
+    - user: root
+    - group: root
+    - recurse:
+      - user
+      - group
+
+/etc/accumulo:
+  file.directory:
+    - owner: root
+    - group: root
+    - mode: 755
+
+{{ real_config }}:
+  file.recurse:
+    - source: salt://accumulo/conf
+    - template: jinja
+    - file_mode: 644
+    - user: root
+    - group: root
+    - context:
+      prefix: {{ alt_home }}
+      java_home: {{ salt['pillar.get']('java_home', '/usr/java/default') }}
+      hadoop_prefix: {{ hadoop_prefix }}
+      alt_config: {{ alt_config }}
+      zookeeper_prefix: {{ zookeeper_prefix }}
+      accumulo_logs: '/var/log/accumulo'
+      namenode_host: {{ namenode_host }}
+      zookeeper_host: {{ zookeeper_host }}
+      hadoop_major: {{ hadoop_major }}
+      accumulo_master: {{ accumulo_master }}
+      accumulo_slaves: {{ accumulo_slaves }}
+
+move-accumulo-dist-conf:
+  cmd.run:
+    - name: mv  {{ real_config_src }} {{ real_config_dist }}
+    - unless: test -L {{ real_config_src }}
+    - onlyif: test -d {{ real_config_src }}
+    - require:
+      - file.directory: {{ real_home }}
+      - file.directory: /etc/accumulo
+
+{{ real_config_src }}:
+  file.symlink:
+    - target: {{ alt_config }}
+    - require:
+      - cmd: move-accumulo-dist-conf
+
+accumulo-conf-link:
+  alternatives.install:
+    - link: {{ alt_config }}
+    - path: {{ real_config }}
+    - priority: 30
+    - require:
+      - file.directory: {{ real_config }}
