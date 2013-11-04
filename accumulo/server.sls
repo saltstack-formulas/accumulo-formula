@@ -26,7 +26,7 @@ make-accumulo-dir:
 set-accumulo-dir:
   cmd.run:
     - user: hdfs
-    - watch:
+    - require:
       - cmd: make-accumulo-dir
     - names:
       - {{ dfs_cmd }} -chmod 700 /accumulo
@@ -46,10 +46,10 @@ make-accumulo-user-dir:
     - require:
       - cmd: make-user-dir
 
-set-accumulo-dir:
+set-accumulo-user-dir:
   cmd.run:
     - user: hdfs
-    - watch:
+    - require:
       - cmd: make-accumulo-user-dir
     - names:
       - {{ dfs_cmd }} -chmod 700 /user/accumulo
