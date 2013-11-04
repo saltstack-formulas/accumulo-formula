@@ -1,3 +1,7 @@
+include:
+  - zookeeper.server
+  - hadoop.hdfs
+
 {%- if grains['os_family'] == 'RedHat' %}
 redhat-lsb-core:
   pkg.installed
@@ -22,6 +26,9 @@ make-accumulo-dir:
     - user: hdfs
     - name: {{ dfs_cmd }} -mkdir /accumulo
     - unless: {{ dfs_cmd }} -stat /accumulo
+    - require:
+      - service: hadoop-datanode
+      - service: zookeeper
 
 set-accumulo-dir:
   cmd.run:
