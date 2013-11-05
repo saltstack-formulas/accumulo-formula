@@ -31,9 +31,9 @@ make-accumulo-dir:
       - service: zookeeper
 
 set-accumulo-dir:
-  cmd.run:
+  cmd.wait:
     - user: hdfs
-    - require:
+    - watch:
       - cmd: make-accumulo-dir
     - names:
       - {{ dfs_cmd }} -chmod 700 /accumulo
@@ -46,17 +46,17 @@ make-user-dir:
     - unless: {{ dfs_cmd }} -stat /user
 
 make-accumulo-user-dir:
-  cmd.run:
+  cmd.wait:
     - user: hdfs
     - name: {{ dfs_cmd }} -mkdir /user/accumulo
     - unless: {{ dfs_cmd }} -stat /user/accumulo
-    - require:
+    - watch:
       - cmd: make-user-dir
 
 set-accumulo-user-dir:
-  cmd.run:
+  cmd.wait:
     - user: hdfs
-    - require:
+    - watch:
       - cmd: make-accumulo-user-dir
     - names:
       - {{ dfs_cmd }} -chmod 700 /user/accumulo

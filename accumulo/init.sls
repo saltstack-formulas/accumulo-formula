@@ -2,10 +2,14 @@
 {%- set accumulo = salt['pillar.get']('accumulo', {}) %}
 {%- set accumulo_users = accumulo.get('users', {}) %}
 {%- set version = accumulo.get('version', '1.5.0') %}
+{%- set version_name = 'accumulo-' + version %}
+{%- set source       = accumulo.get('source', '') %}
+{%- set source_hash  = accumulo.get('source_hash', '') %}
 {%- set alt_home  = salt['pillar.get']('accumulo:prefix', '/usr/lib/accumulo') %}
 {%- set real_home = alt_home + '-' + version %}
-{%- set accumulo_tgz = "accumulo-" + version + "-bin.tar.gz" %}
-{%- set accumulo_tgz_path = '/tmp/' + accumulo_tgz %}
+{%- set tgz = version_name + "-bin.tar.gz" %}
+{%- set src_tgz = version_name + "-src.tar.gz" %}
+{%- set tgz_path = '/tmp/' + tgz %}
 {%- set alt_config = salt['pillar.get']('accumulo:config:directory', '/etc/accumulo/conf') %}
 {%- set real_config = alt_config + '-' + version %}
 {%- set real_config_src = real_home + '/conf' %}
@@ -26,9 +30,9 @@ include:
   - hadoop
 
 {% for username, default_uid in accumulo_user_defaults.items() %}
+{% set userhome = '/home/' + username %}
 
 {% set uid = accumulo_users.get(username, default_uid) %}
-{% set userhome = '/home/' + username %}
 
 {{ username }}:
   group.present:
@@ -101,18 +105,22 @@ ssh_dss_{{ username }}:
 
 {% endfor %}
 
-# hopefully the tarball is on the master
-{{ accumulo_tgz_path }}:
+{{ tgz_path }}:
   file.managed:
-    - source: salt://accumulo/files/{{ accumulo_tgz }}
+{%- if source %}
+    - source: {{ source }}
+    - source_hash: {{ source_hash }}
+{%- else %}
+    - source: salt://accumulo/files/{{ tgz }}
+{%- endif %}
 
 install-accumulo-dist:
   cmd.run:
-    - name: tar xzf {{ accumulo_tgz_path }}
+    - name: tar xzf {{ tgz_path }}
     - cwd: /usr/lib
     - unless: test -d {{ real_home }}/lib
     - require:
-      - file.managed: {{ accumulo_tgz_path }}
+      - file.managed: {{ tgz_path }}
   alternatives.install:
     - name: accumulo-home-link
     - link: {{ alt_home }}
@@ -120,13 +128,6 @@ install-accumulo-dist:
     - priority: 30
     - require:
       - cmd.run: install-accumulo-dist
-  file.directory:
-    - name: {{ real_home }}
-    - user: root
-    - group: root
-    - recurse:
-      - user
-      - group
 
 /etc/accumulo:
   file.directory:
@@ -176,3 +177,41 @@ accumulo-conf-link:
     - priority: 30
     - require:
       - file.directory: {{ real_config }}
+
+{%- set sources = accumulo.get('sources', None) %}
+{%- if sources %}
+
+/tmp/{{ src_tgz }}:
+  file.managed:
+{%- if source %}
+    - source: {{ sources.get('source') }}
+    - source_hash: {{ sources.get('source_hash') }}
+{%- else %}
+    - source: salt://accumulo/files/{{ tgz }}
+{%- endif %}
+
+unpack-sources:
+  cmd.wait:
+    - name: tar xzf /tmp/{{ src_tgz }}
+    - cwd: /usr/lib
+    - user: root
+    - watch:
+      - file: /tmp/{{ src_tgz }}
+
+unpack-sources-to-userhome:
+  cmd.wait:
+    - name: tar xzf /tmp/{{ src_tgz }}
+    - cwd: /home/accumulo
+    - user: accumulo
+    - watch:
+      - file: /tmp/{{ src_tgz }}
+
+{%- endif %}
+
+{{ real_home }}:
+  file.directory:
+    - user: root
+    - group: root
+    - recurse:
+      - user
+      - group
