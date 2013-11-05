@@ -114,11 +114,42 @@ ssh_dss_{{ username }}:
     - source: salt://accumulo/files/{{ tgz }}
 {%- endif %}
 
+{%- set sources = accumulo.get('sources', None) %}
+{%- if sources %}
+
+/tmp/{{ src_tgz }}:
+  file.managed:
+{%- if source %}
+    - source: {{ sources.get('source') }}
+    - source_hash: {{ sources.get('source_hash') }}
+{%- else %}
+    - source: salt://accumulo/files/{{ tgz }}
+{%- endif %}
+
+unpack-sources:
+  cmd.wait:
+    - name: tar xzf /tmp/{{ src_tgz }}
+    - cwd: /usr/lib
+    - unless: test -f {{ real_home }}/examples/pom.xml
+    - user: root
+    - watch:
+      - file: /tmp/{{ src_tgz }}
+
+unpack-sources-to-userhome:
+  cmd.wait:
+    - name: tar xzf /tmp/{{ src_tgz }}
+    - cwd: /home/accumulo
+    - user: accumulo
+    - watch:
+      - file: /tmp/{{ src_tgz }}
+
+{%- endif %}
+
 install-accumulo-dist:
   cmd.run:
     - name: tar xzf {{ tgz_path }}
     - cwd: /usr/lib
-    - unless: test -d {{ real_home }}/lib
+    - unless: test -f {{ real_home }}/lib/accumulo-server.jar
     - require:
       - file.managed: {{ tgz_path }}
   alternatives.install:
@@ -128,6 +159,15 @@ install-accumulo-dist:
     - priority: 30
     - require:
       - cmd.run: install-accumulo-dist
+
+{{ real_home }}:
+  file.directory:
+    - user: root
+    - group: root
+    - recurse:
+      - user
+      - group
+
 
 /etc/accumulo:
   file.directory:
@@ -177,41 +217,3 @@ accumulo-conf-link:
     - priority: 30
     - require:
       - file.directory: {{ real_config }}
-
-{%- set sources = accumulo.get('sources', None) %}
-{%- if sources %}
-
-/tmp/{{ src_tgz }}:
-  file.managed:
-{%- if source %}
-    - source: {{ sources.get('source') }}
-    - source_hash: {{ sources.get('source_hash') }}
-{%- else %}
-    - source: salt://accumulo/files/{{ tgz }}
-{%- endif %}
-
-unpack-sources:
-  cmd.wait:
-    - name: tar xzf /tmp/{{ src_tgz }}
-    - cwd: /usr/lib
-    - user: root
-    - watch:
-      - file: /tmp/{{ src_tgz }}
-
-unpack-sources-to-userhome:
-  cmd.wait:
-    - name: tar xzf /tmp/{{ src_tgz }}
-    - cwd: /home/accumulo
-    - user: accumulo
-    - watch:
-      - file: /tmp/{{ src_tgz }}
-
-{%- endif %}
-
-{{ real_home }}:
-  file.directory:
-    - user: root
-    - group: root
-    - recurse:
-      - user
-      - group
