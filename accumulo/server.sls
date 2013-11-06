@@ -27,7 +27,7 @@ make-accumulo-dir:
     - name: {{ dfs_cmd }} -mkdir /accumulo
     - unless: {{ dfs_cmd }} -stat /accumulo
     - require:
-      - service: hadoop-datanode
+      - service: hdfs-services
       - service: zookeeper
 
 set-accumulo-dir:
