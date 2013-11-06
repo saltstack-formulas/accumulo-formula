@@ -184,7 +184,7 @@ install-accumulo-dist:
     - group: root
     - context:
       prefix: {{ alt_home }}
-      java_home: {{ salt['pillar.get']('java_home', '/usr/java/default') }}
+      java_home: {{ salt['pillar.get']('java_home', '/usr/lib/java') }}
       hadoop_prefix: {{ hadoop_prefix }}
       alt_config: {{ alt_config }}
       zookeeper_prefix: {{ zookeeper_prefix }}
