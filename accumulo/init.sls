@@ -9,7 +9,7 @@
 {%- set real_home = alt_home + '-' + version %}
 {%- set tgz = version_name + "-bin.tar.gz" %}
 {%- set src_tgz = version_name + "-src.tar.gz" %}
-{%- set tgz_path = '/tmp/' + tgz %}
+{%- set tgz_path = salt['pillar.get']('downloads_path', '/tmp') + '/' + tgz %}
 {%- set alt_config = salt['pillar.get']('accumulo:config:directory', '/etc/accumulo/conf') %}
 {%- set real_config = alt_config + '-' + version %}
 {%- set real_config_src = real_home + '/conf' %}
