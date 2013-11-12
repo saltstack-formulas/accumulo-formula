@@ -1,8 +1,9 @@
 include:
   - zookeeper.server
   - hadoop.hdfs
+  - accumulo
 
-{%- if grains['os_family'] == 'RedHat' %}
+{%- if grains['os'] in ['CentOS'] %}
 redhat-lsb-core:
   pkg.installed
 {% endif %}
