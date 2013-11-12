@@ -46,6 +46,25 @@
     <value>{{ salt['pillar.get']('accumulo:secret', '123456789')  }}</value>
   </property>
 
+{%- set asp = salt['pillar.get']('accumulo:config:accumulo-site-profiles', {}) %}
+{%- if accumulo_profile in asp %}
+{%- for name, pdict in asp.get(accumulo_profile).items() %}
+    <property>
+        <name>{{ name }}</name>
+        {% for k, v in pdict.items() %}<{{k}}>{{v}}</{{k}}>
+        {%- endfor %}
+    </property>
+{% endfor %}
+{%- else %}
+{%- for name, pdict in asp.get(accumulo_default_profile).items() %}
+    <property>
+        <name>{{ name }}</name>
+        {% for k, v in pdict.items() %}<{{k}}>{{v}}</{{k}}>
+        {%- endfor %}
+    </property>
+{% endfor %}
+{% endif %}
+
 {%- if pillar['accumulo:config:accumulo-site'] is defined %}
 {%- for name, cdict in salt['pillar.get']('accumulo:config:accumulo-site').items() %}
     <property>
@@ -59,31 +78,6 @@
   <property>
     <name>trace.user</name>
     <value>root</value>
-  </property>
-
-  <property>
-    <name>tserver.memory.maps.max</name>
-    <value>256M</value>
-  </property>
-
-  <property>
-    <name>tserver.cache.data.size</name>
-    <value>15M</value>
-  </property>
-
-  <property>
-    <name>tserver.cache.index.size</name>
-    <value>40M</value>
-  </property>
-
-  <property>
-    <name>tserver.sort.buffer.size</name>
-    <value>50M</value>
-  </property>
-
-  <property>
-    <name>tserver.walog.max.size</name>
-    <value>256M</value>
   </property>
 
 {% endif %}
