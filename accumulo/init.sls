@@ -25,6 +25,9 @@
 {%- set accumulo_master = salt['mine.get']('roles:accumulo_master', 'network.interfaces', 'grain').keys()|first() %}
 {%- set accumulo_slaves = salt['mine.get']('roles:accumulo_slave', 'network.interfaces', 'grain').keys() %}
 
+{%- set accumulo_default_profile = salt['grains.get']('accumulo_default_profile', '512MB') %}
+{%- set accumulo_profile = salt['grains.get']('accumulo_profile', accumulo_default_profile) %}
+{%- set accumulo_profile_dict = salt['pillar.get']('accumulo:config:accumulo-site-profiles:' + accumulo_profile, None) %}
 
 include:
   - hadoop
@@ -194,6 +197,8 @@ install-accumulo-dist:
       hadoop_major: {{ hadoop_major }}
       accumulo_master: {{ accumulo_master }}
       accumulo_slaves: {{ accumulo_slaves }}
+      accumulo_default_profile: {{ accumulo_default_profile }}
+      accumulo_profile: {{ accumulo_profile }}
 
 move-accumulo-dist-conf:
   cmd.run:
