@@ -1,4 +1,5 @@
 include:
+  - sun-java
   - zookeeper.server
   - hadoop.hdfs
   - accumulo
