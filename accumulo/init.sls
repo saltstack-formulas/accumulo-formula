@@ -25,6 +25,14 @@
 {%- set accumulo_master = salt['mine.get']('roles:accumulo_master', 'network.interfaces', 'grain').keys()|first() %}
 {%- set accumulo_slaves = salt['mine.get']('roles:accumulo_slave', 'network.interfaces', 'grain').keys() %}
 
+{%- set accumulo_default_loglevel = 'WARN' %}
+{%- set accumulo_loglevels = ['DEBUG', 'INFO', 'WARN', 'ERROR'] %}
+{%- set accumulo_ll = salt['pillar.get']('accumulo:config:loglevel', accumulo_default_loglevel) %}
+{%- if accumulo_ll in accumulo_loglevels %}
+{%- set accumulo_loglevel = accumulo_ll %}
+{%- else %}
+{%- set accumulo_loglevel = accumulo_default_loglevel %}
+{%- endif %}
 {%- set accumulo_default_profile = salt['grains.get']('accumulo_default_profile', '512MB') %}
 {%- set accumulo_profile = salt['grains.get']('accumulo_profile', accumulo_default_profile) %}
 {%- set accumulo_profile_dict = salt['pillar.get']('accumulo:config:accumulo-site-profiles:' + accumulo_profile, None) %}
@@ -199,6 +207,7 @@ install-accumulo-dist:
       accumulo_slaves: {{ accumulo_slaves }}
       accumulo_default_profile: {{ accumulo_default_profile }}
       accumulo_profile: {{ accumulo_profile }}
+      accumulo_loglevel: {{ accumulo_loglevel }}
 
 move-accumulo-dist-conf:
   cmd.run:
