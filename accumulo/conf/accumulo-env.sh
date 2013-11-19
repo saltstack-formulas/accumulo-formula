@@ -46,10 +46,28 @@ if [ -f {{ alt_config }}/accumulo.policy ]
 then
 	POLICY="-Djava.security.manager -Djava.security.policy={{ alt_config }}/accumulo.policy"
 fi
-test -z "$ACCUMULO_TSERVER_OPTS" && export ACCUMULO_TSERVER_OPTS="${POLICY} -Xmx128m -Xms128m "
-test -z "$ACCUMULO_MASTER_OPTS"  && export ACCUMULO_MASTER_OPTS="${POLICY} -Xmx128m -Xms128m"
-test -z "$ACCUMULO_MONITOR_OPTS" && export ACCUMULO_MONITOR_OPTS="${POLICY} -Xmx64m -Xms64m" 
-test -z "$ACCUMULO_GC_OPTS"      && export ACCUMULO_GC_OPTS="-Xmx64m -Xms64m"
+
+{%- if accumulo_profile == "512MB" %}
+{%- set worker_heap = '512m' %}
+{%- set mgr_heap = '256m' %}
+{%- elif accumulo_profile == "1GB" %}
+{%- set worker_heap = '1024m' %}
+{%- set mgr_heap = '512m' %}
+{%- elif accumulo_profile == "2GB" %}
+{%- set worker_heap = '2048m' %}
+{%- set mgr_heap = '1024m' %}
+{%- elif accumulo_profile == "3GB" %}
+{%- set worker_heap = '3072m' %}
+{%- set mgr_heap = '1536m' %}
+{%- else %}
+{%- set worker_heap = '256m' %}
+{%- set mgr_heap = '128m' %}
+{%- endif %}
+
+test -z "$ACCUMULO_TSERVER_OPTS" && export ACCUMULO_TSERVER_OPTS="${POLICY} -Xmx{{ worker_heap }} -Xms128m "
+test -z "$ACCUMULO_MASTER_OPTS"  && export ACCUMULO_MASTER_OPTS="${POLICY} -Xmx{{ worker_heap }} -Xms128m"
+test -z "$ACCUMULO_MONITOR_OPTS" && export ACCUMULO_MONITOR_OPTS="${POLICY} -Xmx{{ mgr_heap }} -Xms64m"
+test -z "$ACCUMULO_GC_OPTS"      && export ACCUMULO_GC_OPTS="-Xmx{{ mgr_heap }} -Xms64m"
 test -z "$ACCUMULO_GENERAL_OPTS" && export ACCUMULO_GENERAL_OPTS="-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75"
-test -z "$ACCUMULO_OTHER_OPTS"   && export ACCUMULO_OTHER_OPTS="-Xmx128m -Xms64m"
+test -z "$ACCUMULO_OTHER_OPTS"   && export ACCUMULO_OTHER_OPTS="-Xmx{{ worker_heap }} -Xms64m"
 export ACCUMULO_LOG_HOST=`(grep -v '^#' {{ alt_config }}/monitor ; echo localhost ) 2>/dev/null | head -1`
