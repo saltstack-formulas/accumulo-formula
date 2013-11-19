@@ -20,6 +20,7 @@ redhat-lsb-core:
 {%- set real_home = alt_home + '-' + version %}
 {%- set real_config_src = real_home + '/conf' %}
 {%- set real_config_dist = alt_config + '.dist' %}
+{%- set java_home = salt['pillar.get']('java_home', '/usr/lib/java') %}
 {%- set hadoop_prefix  = salt['pillar.get']('hadoop:prefix', '/usr/lib/hadoop') %}
 {%- set hadoop_version = salt['pillar.get']('hadoop:version', '1.2.1') %}
 {%- set hadoop_major   = hadoop_version.split('.')|first() %}
@@ -39,6 +40,7 @@ redhat-lsb-core:
 {%- set accumulo_default_profile = salt['grains.get']('accumulo_default_profile', '512MB') %}
 {%- set accumulo_profile = salt['grains.get']('accumulo_profile', accumulo_default_profile) %}
 {%- set accumulo_profile_dict = salt['pillar.get']('accumulo:config:accumulo-site-profiles:' + accumulo_profile, None) %}
+{%- set test_suite_home = '/home/accumulo/continuous_test' %}
 
 {%- if hadoop_major == '1' %}
 {%- set dfs_cmd = hadoop_prefix + '/bin/hadoop dfs' %}
@@ -61,7 +63,7 @@ redhat-lsb-core:
     - group: root
     - context:
       prefix: {{ alt_home }}
-      java_home: {{ salt['pillar.get']('java_home', '/usr/lib/java') }}
+      java_home: {{ java_home }}
       hadoop_prefix: {{ hadoop_prefix }}
       alt_config: {{ alt_config }}
       zookeeper_prefix: {{ zookeeper_prefix }}
@@ -162,5 +164,22 @@ start-all:
   cmd.run:
     - user: accumulo
     - name: {{prefix}}/bin/start-here.sh
+
+{% endif %}
+
+{%- if 'development' in salt['grains.get']('roles', []) %}
+{{ test_suite_home }}/continuous-env.sh:
+  file.managed:
+    - user: accumulo
+    - source: salt://accumulo/testconf/continuous-env.sh
+    - template: jinja
+    - context:
+      accumulo_prefix: {{ prefix }}
+      hadoop_prefix: {{ hadoop_prefix }}
+      zookeeper_prefix: {{ zookeeper_prefix }}
+      java_home: {{ java_home }}
+      instance_name: {{ instance_name }}
+      zookeeper_host: {{ zookeeper_host }}
+      secret: {{ secret }}
 
 {% endif %}
