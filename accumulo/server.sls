@@ -182,4 +182,14 @@ start-all:
       zookeeper_host: {{ zookeeper_host }}
       secret: {{ secret }}
 
+{{ test_suite_home }}/ingesters.txt:
+  file.managed:
+    - user: accumulo
+    - contents: {{ accumulo_master }}
+
+{%- if grains['os'] == 'Amazon' %}
+pssh:
+  pkg.installed
+{%- endif %}
+
 {% endif %}
