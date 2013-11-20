@@ -158,6 +158,14 @@ install-accumulo-dist:
     - priority: 30
     - require:
       - cmd.run: install-accumulo-dist
+
+snappy-libs:
+  pkg.installed:
+    - names:
+      - snappy
+      - snappy-devel
+
+install-snappy:
   cmd.run:
     - name: tar xzf /tmp/hadoop-snappy-0.0.1.tgz
     - cwd: /usr/lib/hadoop
@@ -165,12 +173,7 @@ install-accumulo-dist:
     - require:
       - file.managed: /tmp/hadoop-snappy-0.0.1.tgz
       - alternatives.install: hadoop-home-link
-
-snappy-libs:
-  pkg.installed:
-    - names:
-      - snappy
-      - snappy-devel
+      - pkg.installed: snappy-libs
 
 {{ real_home }}:
   file.directory:
