@@ -100,6 +100,10 @@ ssh_dss_{{ username }}:
     - source: salt://accumulo/files/{{ tgz }}
 {%- endif %}
 
+/tmp/hadoop-snappy-0.0.1.tgz:
+  file.managed:
+    - source: salt://accumulo/libs/hadoop-snappy-0.0.1.tgz
+
 {%- if 'development' in salt['grains.get']('roles', []) %}
 {%- set sources = accumulo.get('sources', None) %}
 {%- if sources %}
@@ -154,6 +158,19 @@ install-accumulo-dist:
     - priority: 30
     - require:
       - cmd.run: install-accumulo-dist
+  cmd.run:
+    - name: tar xzf /tmp/hadoop-snappy-0.0.1.tgz
+    - cwd: /usr/lib/hadoop
+    - unless: test -f /usr/lib/hadoop/lib/hadoop-snappy-0.0.1-SNAPSHOT.jar
+    - require:
+      - file.managed: /tmp/hadoop-snappy-0.0.1.tgz
+      - alternatives.install: hadoop-home-link
+
+snappy-libs:
+  pkg.installed:
+    - names:
+      - snappy
+      - snappy-devel
 
 {{ real_home }}:
   file.directory:
