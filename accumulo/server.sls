@@ -46,6 +46,7 @@ redhat-lsb-core:
       accumulo_default_profile: {{ accumulo.accumulo_default_profile }}
       accumulo_profile: {{ accumulo.accumulo_profile }}
       accumulo_loglevel: {{ accumulo.accumulo_loglevel }}
+      secret: {{ accumulo.secret }}
 
 move-accumulo-dist-conf:
   cmd.run:

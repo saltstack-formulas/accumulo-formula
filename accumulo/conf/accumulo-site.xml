@@ -37,13 +37,13 @@
 
   <property>
     <name>instance.secret</name>
-    <value>{{ salt['pillar.get']('accumulo:secret', '123456789')  }}</value>
+    <value>{{ secret }}</value>
   </property>
 
   <property>
     <name>trace.token.property.password</name>
     <!-- change this to the root user's password, and/or change the user below -->
-    <value>{{ salt['pillar.get']('accumulo:secret', '123456789')  }}</value>
+    <value>{{ secret }}</value>
   </property>
 
 {%- set asp = salt['pillar.get']('accumulo:config:accumulo-site-profiles', {}) %}
