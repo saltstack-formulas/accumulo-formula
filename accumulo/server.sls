@@ -15,7 +15,7 @@ redhat-lsb-core:
 {%- if accumulo.hadoop_major == '1' %}
 {%- set dfs_cmd = accumulo.hadoop_prefix + '/bin/hadoop dfs' %}
 {%- else %}
-{%- set dfs_cmd = accumulo.hadoop_prefix + '/bin/hdfs' %}
+{%- set dfs_cmd = accumulo.hadoop_prefix + '/bin/hdfs dfs' %}
 {%- endif %}
 
 /etc/accumulo:
