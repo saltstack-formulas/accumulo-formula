@@ -9,14 +9,9 @@ redhat-lsb-core:
   pkg.installed
 {% endif %}
 
+{%- from 'hadoop/settings.sls' import hadoop with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
-
 {%- set test_suite_home = '/home/accumulo/continuous_test' %}
-{%- if accumulo.hadoop_major == '1' %}
-{%- set dfs_cmd = accumulo.hadoop_prefix + '/bin/hadoop dfs' %}
-{%- else %}
-{%- set dfs_cmd = accumulo.hadoop_prefix + '/bin/hdfs dfs' %}
-{%- endif %}
 
 /etc/accumulo:
   file.directory:
@@ -34,13 +29,13 @@ redhat-lsb-core:
     - context:
       prefix: {{ accumulo.prefix }}
       java_home: {{ accumulo.java_home }}
-      hadoop_prefix: {{ accumulo.hadoop_prefix }}
+      hadoop_prefix: {{ hadoop.alt_home }}
       alt_config: {{ accumulo.alt_config }}
       zookeeper_prefix: {{ accumulo.zookeeper_prefix }}
       accumulo_logs: '/var/log/accumulo'
       namenode_host: {{ accumulo.namenode_host }}
       zookeeper_host: {{ accumulo.zookeeper_host }}
-      hadoop_major: {{ accumulo.hadoop_major }}
+      hadoop_major: {{ hadoop.major_version }}
       accumulo_master: {{ accumulo.accumulo_master }}
       accumulo_slaves: {{ accumulo.accumulo_slaves }}
       accumulo_default_profile: {{ accumulo.accumulo_default_profile }}
@@ -76,8 +71,8 @@ accumulo-conf-link:
 make-accumulo-dir:
   cmd.run:
     - user: hdfs
-    - name: {{ dfs_cmd }} -mkdir /accumulo
-    - unless: {{ dfs_cmd }} -stat /accumulo
+    - name: {{ hadoop.dfs_cmd }} -mkdir /accumulo
+    - unless: {{ hadoop.dfs_cmd }} -stat /accumulo
     - require:
       - service: hdfs-services
       - service: zookeeper
@@ -88,20 +83,20 @@ set-accumulo-dir:
     - watch:
       - cmd: make-accumulo-dir
     - names:
-      - {{ dfs_cmd }} -chmod 700 /accumulo
-      - {{ dfs_cmd }} -chown accumulo /accumulo
+      - {{ hadoop.dfs_cmd }} -chmod 700 /accumulo
+      - {{ hadoop.dfs_cmd }} -chown accumulo /accumulo
 
 make-user-dir:
   cmd.run:
     - user: hdfs
-    - name: {{ dfs_cmd }} -mkdir /user
-    - unless: {{ dfs_cmd }} -stat /user
+    - name: {{ hadoop.dfs_cmd }} -mkdir /user
+    - unless: {{ hadoop.dfs_cmd }} -stat /user
 
 make-accumulo-user-dir:
   cmd.wait:
     - user: hdfs
-    - name: {{ dfs_cmd }} -mkdir /user/accumulo
-    - unless: {{ dfs_cmd }} -stat /user/accumulo
+    - name: {{ hadoop.dfs_cmd }} -mkdir /user/accumulo
+    - unless: {{ hadoop.dfs_cmd }} -stat /user/accumulo
     - watch:
       - cmd: make-user-dir
 
@@ -111,8 +106,8 @@ set-accumulo-user-dir:
     - watch:
       - cmd: make-accumulo-user-dir
     - names:
-      - {{ dfs_cmd }} -chmod 700 /user/accumulo
-      - {{ dfs_cmd }} -chown accumulo /user/accumulo
+      - {{ hadoop.dfs_cmd }} -chmod 700 /user/accumulo
+      - {{ hadoop.dfs_cmd }} -chown accumulo /user/accumulo
 
 check-zookeeper:
   cmd.run:

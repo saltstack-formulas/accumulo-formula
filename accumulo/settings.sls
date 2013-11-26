@@ -19,9 +19,7 @@
 {%- set real_config_src = real_home + '/conf' %}
 {%- set real_config_dist = alt_config + '.dist' %}
 {%- set java_home = salt['pillar.get']('java_home', '/usr/lib/java') %}
-{%- set hadoop_prefix  = salt['pillar.get']('hadoop:prefix', '/usr/lib/hadoop') %}
-{%- set hadoop_version = salt['pillar.get']('hadoop:version', '1.2.1') %}
-{%- set hadoop_major   = hadoop_version.split('.')|first() %}
+
 {%- set zookeeper_prefix  = salt['pillar.get']('zookeeper:prefix', '/usr/lib/zookeeper') %}
 {%- set accumulo_default_loglevel = 'WARN' %}
 {%- set accumulo_loglevels = ['DEBUG', 'INFO', 'WARN', 'ERROR'] %}
@@ -59,9 +57,6 @@
                           'real_config_src' : real_config_src,
                           'real_config_dist' : real_config_dist,
                           'java_home' : java_home,
-                          'hadoop_prefix' : hadoop_prefix,
-                          'hadoop_version' : hadoop_version,
-                          'hadoop_major' : hadoop_major,
                           'zookeeper_prefix' : zookeeper_prefix,
                           'namenode_host' : namenode_host,
                           'zookeeper_host' : zookeeper_host,

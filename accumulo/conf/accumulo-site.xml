@@ -85,7 +85,8 @@
   <property>
     <name>general.classpaths</name>
     <value>
-{%- if hadoop_major != 1 %}
+        <!-- {{ hadoop_major }} -->
+{%- if hadoop_major != '1' %}
       $HADOOP_PREFIX/share/hadoop/common/.*.jar,
       $HADOOP_PREFIX/share/hadoop/common/lib/.*.jar,
       $HADOOP_PREFIX/share/hadoop/hdfs/.*.jar,

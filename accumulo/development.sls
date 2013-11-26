@@ -1,6 +1,7 @@
 include:
   - accumulo
 
+{%- from 'hadoop/settings.sls' import hadoop with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
 {%- set test_suite_home = '/home/accumulo/continuous_test' %}
@@ -42,7 +43,7 @@ copy-testsuite:
     - template: jinja
     - context:
       accumulo_prefix: {{ accumulo.prefix }}
-      hadoop_prefix: {{ accumulo.hadoop_prefix }}
+      hadoop_prefix: {{ hadoop.alt_home }}
       zookeeper_prefix: {{ accumulo.zookeeper_prefix }}
       java_home: {{ accumulo.java_home }}
       instance_name: {{ accumulo.instance_name }}
