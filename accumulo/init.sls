@@ -4,9 +4,6 @@ include:
 
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
-{%- set tgz = accumulo.version_name + "-bin.tar.gz" %}
-{%- set tgz_path = salt['pillar.get']('downloads_path', '/tmp') + '/' + tgz %}
-
 accumulo:
   group.present:
     - gid: {{ accumulo.uid }}
@@ -76,24 +73,16 @@ ssh_dss_accumulo:
     - text:
       - export PATH=$PATH:/usr/lib/hadoop/bin:/usr/lib/hadoop/sbin:/usr/lib/accumulo/bin
 
-{{ tgz_path }}:
-  file.managed:
-{%- if accumulo.source %}
-    - source: {{ accumulo.source }}
-    - source_hash: {{ accumulo.source_hash }}
-{%- else %}
-    - source: salt://accumulo/files/{{ tgz }}
-{%- endif %}
-
 install-accumulo-dist:
   cmd.run:
-    - name: tar xzf {{ tgz_path }}
+    - name: curl '{{ accumulo.source_url }}' | tar xz
+    - user: root
+    - group: root
     - cwd: /usr/lib
-    - unless: test -f {{ accumulo.real_home }}/lib/accumulo-server.jar
-    - require:
-      - file.managed: {{ tgz_path }}
+    - unless: test -d {{ accumulo.alt_home }}
+
+accumulo-home-link:
   alternatives.install:
-    - name: accumulo-home-link
     - link: {{ accumulo.alt_home }}
     - path: {{ accumulo.real_home }}
     - priority: 30

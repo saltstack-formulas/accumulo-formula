@@ -1,13 +1,12 @@
 {%- set default_uid = '6040' %}
 {%- set userhome = '/home/accumulo' %}
 {%- set uid = salt['pillar.get']('accumulo:uid', default_uid) %}
-# the version and source can either come out of a grain, the pillar or end up the default (currently 1.5.0)
-{%- set pillar_source      = salt['pillar.get']('accumulo:source', '') %}
-{%- set pillar_source_hash = salt['pillar.get']('accumulo:source_hash', '') %}
+# the version and source can either come out of a grain, the pillar or end up the default (currently 1.5.0 and the apache backup mirror)
 {%- set pillar_version     = salt['pillar.get']('accumulo:version', '1.5.0') %}
 {%- set version      = salt['grains.get']('accumulo_version', pillar_version) %}
-{%- set source       = salt['grains.get']('accumulo_source', pillar_source) %}
-{%- set source_hash  = salt['grains.get']('accumulo_source_hash', pillar_source_hash) %}
+{%- set default_url  = 'http://www.us.apache.org/dist/accumulo/' + version + '/accumulo-' + version + '-bin.tar.gz' %}
+{%- set pillar_source      = salt['pillar.get']('accumulo:source', default_url) %}
+{%- set source_url   = salt['grains.get']('accumulo_source', pillar_source) %}
 {%- set version_name = 'accumulo-' + version %}
 {%- set prefix = salt['pillar.get']('accumulo:prefix', '/usr/lib/accumulo') %}
 {%- set instance_name = salt['pillar.get']('accumulo:config:instance_name', 'accumulo') %}
@@ -45,8 +44,7 @@
                           'version_name': version_name,
                           'userhome' : userhome,
                           'sources': None,
-                          'source': source,
-                          'source_hash': source_hash,
+                          'source_url': source_url,
                           'prefix' : prefix,
                           'instance_name': instance_name,
                           'secret': secret,
