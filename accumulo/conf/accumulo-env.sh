@@ -38,7 +38,7 @@ else
    unset HADOOP_HOME
 fi
 
-test -z "$HADOOP_CONF_DIR"     && export HADOOP_CONF_DIR={{ alt_config }}
+test -z "$HADOOP_CONF_DIR"       && export HADOOP_CONF_DIR={{ hadoop_config }}
 test -z "$JAVA_HOME"             && export JAVA_HOME={{ java_home }}
 test -z "$ZOOKEEPER_HOME"        && export ZOOKEEPER_HOME={{ zookeeper_prefix }}
 test -z "$ACCUMULO_LOG_DIR"      && export ACCUMULO_LOG_DIR={{ accumulo_logs }}

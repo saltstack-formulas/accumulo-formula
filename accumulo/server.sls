@@ -30,6 +30,7 @@ redhat-lsb-core:
       prefix: {{ accumulo.prefix }}
       java_home: {{ accumulo.java_home }}
       hadoop_prefix: {{ hadoop.alt_home }}
+      hadoop_config: {{ hadoop.alt_config }}
       alt_config: {{ accumulo.alt_config }}
       zookeeper_prefix: {{ accumulo.zookeeper_prefix }}
       accumulo_logs: '/var/log/accumulo'

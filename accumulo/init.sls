@@ -10,6 +10,7 @@ accumulo:
   user.present:
     - uid: {{ accumulo.uid }}
     - gid: {{ accumulo.uid }}
+    - shell: /bin/bash
     - home: {{ accumulo.userhome }}
     - groups: ['hadoop']
     - require:
