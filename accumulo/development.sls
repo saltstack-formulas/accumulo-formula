@@ -55,7 +55,15 @@ copy-testsuite:
     - user: accumulo
     - contents: {{ accumulo.accumulo_master }}
 
-{%- if grains['os'] == 'Amazon' %}
+{%- if grains['os'] in ['Amazon', 'Ubuntu'] %}
 pssh:
   pkg.installed
+{%- endif %}
+
+{%- if grains['os'] in ['Ubuntu'] %}
+/usr/local/bin/pssh:
+  file.symlink:
+    - target: /usr/bin/parallel-ssh
+    - require:
+      pkg: pssh
 {%- endif %}
