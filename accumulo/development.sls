@@ -65,5 +65,5 @@ pssh:
   file.symlink:
     - target: /usr/bin/parallel-ssh
     - require:
-      pkg: pssh
+      - pkg: pssh
 {%- endif %}
