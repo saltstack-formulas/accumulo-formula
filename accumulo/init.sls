@@ -2,6 +2,11 @@ include:
   - hadoop
   - hadoop.snappy
 
+{%- if grains['os_family'] in ['RedHat'] %}
+redhat-lsb-core:
+  pkg.installed
+{% endif %}
+
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
 accumulo:
