@@ -24,6 +24,7 @@ include:
     - context:
       prefix: {{ accumulo.prefix }}
       java_home: {{ accumulo.java_home }}
+      accumulo_local: '/var/lib/accumulo'
       hadoop_prefix: {{ hadoop.alt_home }}
       hadoop_config: {{ hadoop.alt_config }}
       alt_config: {{ accumulo.alt_config }}

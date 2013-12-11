@@ -1,0 +1,64 @@
+{
+    "servers": [
+        {
+            "port": 26051,
+            "host": "localhost",
+            "queries": [
+                {
+                    "outputWriters": [
+                        {
+                            "@class": "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+                            "settings": {
+                                "port": "${graphite_port}",
+                                "host": "${graphite_host}"
+                            }
+                        }
+                    ],
+                    "obj": "accumulo.server.metrics:instance=tserver,name=TabletServerMBean,service=TServerInfo",
+                    "resultAlias": "TabletServerInfo",
+                    "attr": [
+                        "EntriesInMemory",
+                        "Ingest",
+                        "MajorCompactions",
+                        "MajorCompactionsQueued",
+                        "MinorCompactions",
+                        "MinorCompactionsQueued",
+                        "OnlineCount",
+                        "OpeningCount",
+                        "Queries",
+                        "UnopenedCount",
+                        "TotalMinorCompactions",
+                        "HoldTime",
+                        "AverageFilesPerTablet",
+                        "Entries"
+                    ]
+                },
+                {
+                    "outputWriters": [
+                        {
+                            "@class": "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+                            "settings": {
+                                "port": "${graphite_port}",
+                                "host": "${graphite_host}"
+                            }
+                        }
+                    ],
+                    "obj": "accumulo.server.metrics:instance=tserver,name=TabletServerMinCMetricsMBean,service=TServerInfo",
+                    "resultAlias": "TabletServerMinorCompactions",
+                    "attr": [
+                        "MinorCompactionQueueMaxTime",
+                        "MinorCompactionQueueMinTime",
+                        "MinorCompactionMaxTime",
+                        "MinorCompactionQueueAvgTime",
+                        "MinorCompactionQueueCount",
+                        "MinorCompactionMinTime",
+                        "MinorCompactionAvgTime",
+                        "MinorCompactionCount"
+                    ]
+                }
+
+            ],
+            "numQueryThreads": 2
+        }
+    ]
+}

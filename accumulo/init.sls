@@ -77,7 +77,8 @@ ssh_dss_accumulo:
 {{ accumulo.userhome }}/.bashrc:
   file.append:
     - text:
-      - export PATH=$PATH:/usr/lib/hadoop/bin:/usr/lib/hadoop/sbin:/usr/lib/accumulo/bin
+      - export PATH=$PATH:/usr/lib/accumulo/bin
+      - export CONTINUOUS_CONF_DIR=/home/accumulo/
 
 install-accumulo-dist:
   cmd.run:

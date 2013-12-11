@@ -64,10 +64,12 @@ fi
 {%- set mgr_heap = '128m' %}
 {%- endif %}
 
-test -z "$ACCUMULO_TSERVER_OPTS" && export ACCUMULO_TSERVER_OPTS="${POLICY} -Xmx{{ worker_heap }} -Xms128m "
-test -z "$ACCUMULO_MASTER_OPTS"  && export ACCUMULO_MASTER_OPTS="${POLICY} -Xmx{{ worker_heap }} -Xms128m"
-test -z "$ACCUMULO_MONITOR_OPTS" && export ACCUMULO_MONITOR_OPTS="${POLICY} -Xmx{{ mgr_heap }} -Xms64m"
-test -z "$ACCUMULO_GC_OPTS"      && export ACCUMULO_GC_OPTS="-Xmx{{ mgr_heap }} -Xms64m"
+export JMX_OPTS=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote -Djava.rmi.server.hostname=127.0.0.1"
+
+test -z "$ACCUMULO_TSERVER_OPTS" && export ACCUMULO_TSERVER_OPTS="$JMX_OPTS -Dcom.sun.management.jmxremote.port=26051 ${POLICY} -Xmx{{ worker_heap }} -Xms128m "
+test -z "$ACCUMULO_MASTER_OPTS"  && export ACCUMULO_MASTER_OPTS="$JMX_OPTS -Dcom.sun.management.jmxremote.port=26052 ${POLICY} -Xmx{{ worker_heap }} -Xms128m"
+test -z "$ACCUMULO_MONITOR_OPTS" && export ACCUMULO_MONITOR_OPTS="$JMX_OPTS -Dcom.sun.management.jmxremote.port=26053 ${POLICY} -Xmx{{ mgr_heap }} -Xms64m"
+test -z "$ACCUMULO_GC_OPTS"      && export ACCUMULO_GC_OPTS="$JMX_OPTS -Dcom.sun.management.jmxremote.port=26054 -Xmx{{ mgr_heap }} -Xms64m"
 test -z "$ACCUMULO_GENERAL_OPTS" && export ACCUMULO_GENERAL_OPTS="-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75"
 test -z "$ACCUMULO_OTHER_OPTS"   && export ACCUMULO_OTHER_OPTS="-Xmx{{ worker_heap }} -Xms64m"
 export ACCUMULO_LOG_HOST=`(grep -v '^#' {{ alt_config }}/monitor ; echo localhost ) 2>/dev/null | head -1`
