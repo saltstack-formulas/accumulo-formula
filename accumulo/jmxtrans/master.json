@@ -1,0 +1,45 @@
+{
+    "servers": [
+        {
+            "port": 26052,
+            "host": "localhost",
+            "alias": "${source_alias}",
+            "queries": [
+                {
+                    "outputWriters": [
+                        {
+                            "@class": "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+                            "settings": {
+                                "rootPrefix": "accumulo/masters",
+                                "port": "${graphite_port}",
+                                "host": "${graphite_host}"
+                            }
+                        }
+                    ],
+                    "obj": "java.lang:type=OperatingSystem",
+                    "resultAlias": "Process",
+                    "attr": [
+                      "OpenFileDescriptorCount",
+                      "ProcessCpuLoad"
+                    ]
+                },
+                {
+                    "outputWriters": [
+                        {
+                            "@class": "com.googlecode.jmxtrans.model.output.GraphiteWriter",
+                            "settings": {
+                                "rootPrefix": "accumulo/masters",
+                                "port": "${graphite_port}",
+                                "host": "${graphite_host}"
+                            }
+                        }
+                    ],
+                    "obj": "java.lang:type=ClassLoading",
+                    "resultAlias": "Classloading",
+                    "attr": [ "LoadedClassCount"]
+                }
+            ],
+            "numQueryThreads": 2
+        }
+    ]
+}
