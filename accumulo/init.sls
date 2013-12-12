@@ -78,7 +78,7 @@ ssh_dss_accumulo:
   file.append:
     - text:
       - export PATH=$PATH:/usr/lib/accumulo/bin
-      - export CONTINUOUS_CONF_DIR=/home/accumulo/
+      - export CONTINUOUS_CONF_DIR=/home/accumulo/continuous_test
 
 install-accumulo-dist:
   cmd.run:
