@@ -22,7 +22,8 @@
 {%- set zookeeper_prefix  = salt['pillar.get']('zookeeper:prefix', '/usr/lib/zookeeper') %}
 {%- set accumulo_default_loglevel = 'WARN' %}
 {%- set accumulo_loglevels = ['DEBUG', 'INFO', 'WARN', 'ERROR'] %}
-{%- set accumulo_ll = salt['pillar.get']('accumulo:config:loglevel', accumulo_default_loglevel) %}
+{%- set pillar_accumulo_ll = salt['pillar.get']('accumulo:config:loglevel', accumulo_default_loglevel) %}
+{%- set accumulo_ll = salt['grains.get']('accumulo:config:loglevel', pillar_accumulo_ll) %}
 {%- if accumulo_ll in accumulo_loglevels %}
 {%- set accumulo_loglevel = accumulo_ll %}
 {%- else %}
@@ -31,6 +32,8 @@
 {%- set accumulo_default_profile = salt['grains.get']('accumulo_default_profile', '512MB') %}
 {%- set accumulo_profile = salt['grains.get']('accumulo_profile', accumulo_default_profile) %}
 {%- set accumulo_profile_dict = salt['pillar.get']('accumulo:config:accumulo-site-profiles:' + accumulo_profile, None) %}
+{%- set pillar_log_root = salt['pillar.get']('alt_logroot', '/var/log' ) %}
+{%- set log_root = salt['grains.get']('alt_logroot', pillar_log_root ) %}
 
 # TODO:
 {%- set namenode_host = salt['mine.get']('roles:hadoop_master', 'network.interfaces', 'grain').keys()|first() %}
@@ -48,6 +51,7 @@
                           'prefix' : prefix,
                           'instance_name': instance_name,
                           'secret': secret,
+                          'log_root': log_root,
                           'alt_config' : alt_config,
                           'real_config' : real_config,
                           'alt_home' : alt_home,
