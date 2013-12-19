@@ -29,7 +29,7 @@ include:
       hadoop_config: {{ hadoop.alt_config }}
       alt_config: {{ accumulo.alt_config }}
       zookeeper_prefix: {{ accumulo.zookeeper_prefix }}
-      accumulo_logs: '/var/log/accumulo'
+      accumulo_logs: {{ accumulo.log_root }}
       namenode_host: {{ accumulo.namenode_host }}
       zookeeper_host: {{ accumulo.zookeeper_host }}
       hadoop_major: {{ hadoop.major_version }}
@@ -113,7 +113,7 @@ check-zookeeper:
 init-accumulo:
   cmd.run:
     - user: accumulo
-    - name: {{accumulo.prefix}}/bin/accumulo init --instance-name {{ accumulo.instance_name }} --password {{ accumulo.secret }} > /var/log/accumulo/accumulo-init.log
+    - name: {{accumulo.prefix}}/bin/accumulo init --instance-name {{ accumulo.instance_name }} --password {{ accumulo.secret }} > {{ accumulo.log_root }}/accumulo-init.log
     - unless: grep -i accumulo /tmp/acc.status
 
 start-all:

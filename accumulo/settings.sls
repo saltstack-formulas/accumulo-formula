@@ -32,8 +32,8 @@
 {%- set accumulo_default_profile = salt['grains.get']('accumulo_default_profile', '512MB') %}
 {%- set accumulo_profile = salt['grains.get']('accumulo_profile', accumulo_default_profile) %}
 {%- set accumulo_profile_dict = salt['pillar.get']('accumulo:config:accumulo-site-profiles:' + accumulo_profile, None) %}
-{%- set pillar_log_root = salt['pillar.get']('alt_logroot', '/var/log' ) %}
-{%- set log_root = salt['grains.get']('alt_logroot', pillar_log_root ) %}
+{%- set pillar_log_root = salt['pillar.get']('accumulo:logroot', '/var/log/accumulo' ) %}
+{%- set log_root = salt['grains.get']('accumulo:logroot', pillar_log_root ) %}
 
 # TODO:
 {%- set namenode_host = salt['mine.get']('roles:hadoop_master', 'network.interfaces', 'grain').keys()|first() %}

@@ -24,8 +24,9 @@ accumulo:
   file.directory:
     - user: accumulo
     - group: accumulo
+    - makedirs: True
     - names:
-      - /var/log/accumulo
+      - {{ accumulo.log_root }}
       - /var/run/accumulo
       - /var/lib/accumulo
 

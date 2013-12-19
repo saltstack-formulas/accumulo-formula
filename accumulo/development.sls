@@ -48,6 +48,7 @@ copy-testsuite:
       java_home: {{ accumulo.java_home }}
       instance_name: {{ accumulo.instance_name }}
       zookeeper_host: {{ accumulo.zookeeper_host }}
+      accumulo_log_root: {{ accumulo.log_root }}
       secret: {{ accumulo.secret }}
 
 {{ test_suite_home }}/ingesters.txt:

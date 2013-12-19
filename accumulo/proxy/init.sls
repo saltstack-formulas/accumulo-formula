@@ -28,6 +28,7 @@ include:
     - context:
       accumulo_config: {{ accumulo.alt_config }}
       accumulo_prefix: {{ accumulo.alt_home }}
+      accumulo_log_root: {{ accumulo.log_root }}
 
 accumulo-proxy:
   service:
