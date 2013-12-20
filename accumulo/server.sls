@@ -72,7 +72,7 @@ make-accumulo-dir:
     - unless: {{ hadoop.dfs_cmd }} -stat /accumulo
     - require:
       - service: hdfs-services
-      - service: zookeeper
+      - service: zookeeper-service
 
 set-accumulo-dir:
   cmd.wait:
