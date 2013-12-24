@@ -6,7 +6,6 @@ include:
 
 {%- from 'hadoop/settings.sls' import hadoop with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
-{%- set test_suite_home = '/home/accumulo/continuous_test' %}
 
 /etc/accumulo:
   file.directory:

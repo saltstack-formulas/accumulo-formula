@@ -4,8 +4,6 @@ include:
 {%- from 'hadoop/settings.sls' import hadoop with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
-{%- set test_suite_home = '/home/accumulo/continuous_test' %}
-
 {%- if accumulo.sources %}
 
 {%- set src_tgz = accumulo.sources.get('tgz', '') %}
@@ -33,10 +31,19 @@ unpack-sources-to-userhome:
 copy-testsuite:
   cmd.run:
     - user: accumulo
-    - name: cp -r {{ accumulo.prefix }}/test/system/continuous {{ test_suite_home }}
-    - unless: test -d {{ test_suite_home }}
+    - name: cp -r {{ accumulo.prefix }}/test/system/continuous {{ accumulo.test_suite_home }}
+    - unless: test -d {{ accumulo.test_suite_home }}
 
-{{ test_suite_home }}/continuous-env.sh:
+{{ accumulo.test_suite_logroot }}:
+  file.directory:
+    - user: accumulo
+    - group: accumulo
+
+{{ accumulo.test_suite_home }}/logs:
+  file.symlink:
+    - target: {{ accumulo.test_suite_logroot }}
+
+{{ accumulo.test_suite_home }}/continuous-env.sh:
   file.managed:
     - user: accumulo
     - source: salt://accumulo/testconf/continuous-env.sh
@@ -51,7 +58,7 @@ copy-testsuite:
       accumulo_log_root: {{ accumulo.log_root }}
       secret: {{ accumulo.secret }}
 
-{{ test_suite_home }}/ingesters.txt:
+{{ accumulo.test_suite_home }}/ingesters.txt:
   file.managed:
     - user: accumulo
     - contents: {{ accumulo.accumulo_master }}
@@ -68,3 +75,4 @@ pssh:
     - require:
       - pkg: pssh
 {%- endif %}
+
