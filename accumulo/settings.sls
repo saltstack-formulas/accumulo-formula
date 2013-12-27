@@ -34,6 +34,8 @@
 {%- set accumulo_profile_dict = salt['pillar.get']('accumulo:config:accumulo-site-profiles:' + accumulo_profile, None) %}
 {%- set pillar_log_root = salt['pillar.get']('accumulo:logroot', '/var/log/accumulo' ) %}
 {%- set log_root = salt['grains.get']('accumulo:logroot', pillar_log_root ) %}
+{%- set test_suite_logroot = log_root + '/continuous_test' %}
+{%- set test_suite_home = '/home/accumulo/continuous_test' %}
 
 # TODO:
 {%- set namenode_host = salt['mine.get']('roles:hadoop_master', 'network.interfaces', 'grain').keys()|first() %}
@@ -66,5 +68,7 @@
                           'accumulo_slaves' : accumulo_slaves,
                           'accumulo_loglevel' : accumulo_loglevel,
                           'accumulo_default_profile' : accumulo_default_profile,
-                          'accumulo_profile' : accumulo_profile
+                          'accumulo_profile' : accumulo_profile,
+                          'test_suite_home': test_suite_home,
+                          'test_suite_logroot': test_suite_logroot,
                         }) %}
