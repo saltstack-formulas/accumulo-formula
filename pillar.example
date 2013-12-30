@@ -1,12 +1,13 @@
 accumulo:
   version: 1.5.0
-  source: http://www.us.apache.org/dist/accumulo/1.5.0/accumulo-1.5.0-bin.tar.gz
-  logroot: /var/log/accumulo
+  source_url: http://www.us.apache.org/dist/accumulo/1.5.0/accumulo-1.5.0-bin.tar.gz
   sources:
     source: http://www.us.apache.org/dist/accumulo/1.5.0/accumulo-1.5.0-src.tar.gz
     source_hash: sha1=c2bacfd8abeb60d50d87820a4b9fabed92078370
 
   config:
+    loglevel: INFO
+    logroot: /var/log/accumulo
     - accumulo-site:
       trace.user:
         value: root
