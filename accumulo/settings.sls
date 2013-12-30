@@ -3,10 +3,10 @@
 {%- set uid = salt['pillar.get']('accumulo:uid', default_uid) %}
 # the version and source can either come out of a grain, the pillar or end up the default (currently 1.5.0 and the apache backup mirror)
 {%- set pillar_version     = salt['pillar.get']('accumulo:version', '1.5.0') %}
-{%- set version      = salt['grains.get']('accumulo_version', pillar_version) %}
+{%- set version      = salt['grains.get']('accumulo:version', pillar_version) %}
 {%- set default_url  = 'http://www.us.apache.org/dist/accumulo/' + version + '/accumulo-' + version + '-bin.tar.gz' %}
-{%- set pillar_source      = salt['pillar.get']('accumulo:source', default_url) %}
-{%- set source_url   = salt['grains.get']('accumulo_source', pillar_source) %}
+{%- set pillar_source      = salt['pillar.get']('accumulo:source_url', default_url) %}
+{%- set source_url   = salt['grains.get']('accumulo:source_url', pillar_source) %}
 {%- set version_name = 'accumulo-' + version %}
 {%- set prefix = salt['pillar.get']('accumulo:prefix', '/usr/lib/accumulo') %}
 {%- set instance_name = salt['pillar.get']('accumulo:config:instance_name', 'accumulo') %}
@@ -29,11 +29,11 @@
 {%- else %}
 {%- set accumulo_loglevel = accumulo_default_loglevel %}
 {%- endif %}
-{%- set accumulo_default_profile = salt['grains.get']('accumulo_default_profile', '512MB') %}
-{%- set accumulo_profile = salt['grains.get']('accumulo_profile', accumulo_default_profile) %}
+{%- set accumulo_default_profile = salt['grains.get']('accumulo:config:default_profile', '512MB') %}
+{%- set accumulo_profile = salt['grains.get']('accumulo:config:profile', accumulo_default_profile) %}
 {%- set accumulo_profile_dict = salt['pillar.get']('accumulo:config:accumulo-site-profiles:' + accumulo_profile, None) %}
-{%- set pillar_log_root = salt['pillar.get']('accumulo:logroot', '/var/log/accumulo' ) %}
-{%- set log_root = salt['grains.get']('accumulo:logroot', pillar_log_root ) %}
+{%- set pillar_log_root = salt['pillar.get']('accumulo:config:logroot', '/var/log/accumulo' ) %}
+{%- set log_root = salt['grains.get']('accumulo:config:logroot', pillar_log_root ) %}
 {%- set test_suite_logroot = log_root + '/continuous_test' %}
 {%- set test_suite_home = '/home/accumulo/continuous_test' %}
 
