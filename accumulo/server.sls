@@ -2,14 +2,14 @@ include:
   - sun-java
   - zookeeper.server
   - hadoop.hdfs
-  - accumulo
+  - accumulo.native
 
 {%- from 'hadoop/settings.sls' import hadoop with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
 /etc/accumulo:
   file.directory:
-    - owner: root
+    - user: root
     - group: root
     - mode: 755
 
