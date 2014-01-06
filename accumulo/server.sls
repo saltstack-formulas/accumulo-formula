@@ -39,7 +39,6 @@ include:
       hadoop_version: {{ hadoop.dist_id }}
       accumulo_master: {{ accumulo.accumulo_master }}
       accumulo_slaves: {{ accumulo.accumulo_slaves }}
-      default_memory_profile: {{ accumulo.default_memory_profile }}
       memory_profile: {{ accumulo.memory_profile }}
       secret: {{ accumulo.secret }}
 
