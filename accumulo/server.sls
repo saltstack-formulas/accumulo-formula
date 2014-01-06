@@ -32,7 +32,7 @@ include:
       accumulo_walogs: {{ accumulo.walogs }}
       accumulo_logs: {{ accumulo.log_root }}
       accumulo_loglevel: {{ accumulo.log_level }}
-      namenode_host: {{ accumulo.namenode_host }}
+      namenode_host: {{ hadoop.namenode_host }}
       zookeeper_host: {{ zk.zookeeper_host }}
       zookeeper_port: {{ zk.port }}
       hadoop_major: {{ hadoop.major_version }}

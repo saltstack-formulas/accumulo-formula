@@ -15,17 +15,18 @@
 {%- set default_walogs    = '/var/lib/accumulo/walogs' %}
 {%- set loglevels         = ['DEBUG', 'INFO', 'WARN', 'ERROR'] %}
 
-{%- set uid           = gc.get('uid', pc.get('uid', default_uid)) %}
-{%- set version       = g.get('version', p.get('version', default_version)) %}
+{%- set uid            = gc.get('uid', pc.get('uid', default_uid)) %}
+{%- set version        = g.get('version', p.get('version', default_version)) %}
 
-{%- set default_url   = 'http://www.us.apache.org/dist/accumulo/' + version + '/accumulo-' + version + '-bin.tar.gz' %}
-{%- set source_url    = g.get('source_url', p.get('source_url', default_url)) %}
+{%- set default_url    = 'http://www.us.apache.org/dist/accumulo/' + version + '/accumulo-' + version + '-bin.tar.gz' %}
+{%- set source_url     = g.get('source_url', p.get('source_url', default_url)) %}
 
-{%- set version_name  = 'accumulo-' + version %}
-{%- set prefix        = g.get('prefix', p.get('prefix', default_prefix)) %}
-{%- set instance_name = gc.get('instance_name', pc.get('instance_name', default_instance_name)) %}
-{%- set secret        = gc.get('secret', pc.get('secret', default_secret)) %}
-{%- set walogs        = gc.get('walogs', pc.get('walogs', default_walogs)) %}
+{%- set version_name   = 'accumulo-' + version %}
+{%- set prefix         = g.get('prefix', p.get('prefix', default_prefix)) %}
+{%- set instance_name  = gc.get('instance_name', pc.get('instance_name', default_instance_name)) %}
+{%- set secret         = gc.get('secret', pc.get('secret', default_secret)) %}
+{%- set walogs         = gc.get('walogs', pc.get('walogs', default_walogs)) %}
+{%- set memory_profile = salt['grains.get']('accumulo:config:memory_profile', default_memory_profile) %}
 
 {%- set alt_config = salt['pillar.get']('accumulo:config:directory', '/etc/accumulo/conf') %}
 {%- set real_config = alt_config + '-' + version %}
@@ -43,10 +44,6 @@
 {%- set log_level = default_log_level %}
 {%- endif %}
 
-{%- set memory_profile = salt['grains.get']('accumulo:config:memory_profile', default_memory_profile) %}
-
-# TODO:
-{%- set namenode_host = salt['mine.get']('roles:hadoop_master', 'network.interfaces', 'grain').keys()|first() %}
 {%- set accumulo_master = salt['mine.get']('roles:accumulo_master', 'network.interfaces', 'grain').keys()|first() %}
 {%- set accumulo_slaves = salt['mine.get']('roles:accumulo_slave', 'network.interfaces', 'grain').keys() %}
 
@@ -67,14 +64,9 @@
                           'real_config_dist' : real_config_dist,
                           'java_home' : java_home,
                           'walogs': walogs,
-                          'namenode_host' : namenode_host,
-                          'zookeeper_host' : zookeeper_host,
                           'accumulo_master' : accumulo_master,
                           'accumulo_slaves' : accumulo_slaves,
                           'log_root': log_root,
                           'log_level' : log_level,
-                          'default_memory_profile' : default_memory_profile,
-                          'memory_profile' : memory_profile,
-                          'test_suite_home': test_suite_home,
-                          'test_suite_logroot': test_suite_logroot,
+                          'memory_profile' : memory_profile
                         }) %}
