@@ -1,16 +1,30 @@
-{%- set default_uid = '6040' %}
-{%- set userhome = '/home/accumulo' %}
-{%- set uid = salt['pillar.get']('accumulo:uid', default_uid) %}
-# the version and source can either come out of a grain, the pillar or end up the default (currently 1.5.0 and the apache backup mirror)
-{%- set pillar_version     = salt['pillar.get']('accumulo:version', '1.5.0') %}
-{%- set version      = salt['grains.get']('accumulo:version', pillar_version) %}
-{%- set default_url  = 'http://www.us.apache.org/dist/accumulo/' + version + '/accumulo-' + version + '-bin.tar.gz' %}
-{%- set pillar_source      = salt['pillar.get']('accumulo:source_url', default_url) %}
-{%- set source_url   = salt['grains.get']('accumulo:source_url', pillar_source) %}
-{%- set version_name = 'accumulo-' + version %}
-{%- set prefix = salt['pillar.get']('accumulo:prefix', '/usr/lib/accumulo') %}
-{%- set instance_name = salt['pillar.get']('accumulo:config:instance_name', 'accumulo') %}
-{%- set secret = salt['pillar.get']('accumulo:secret', 'secret') %}
+{% set p  = salt['pillar.get']('accumulo', {}) %}
+{% set pc = p.get('config', {}) %}
+{% set g  = salt['grains.get']('accumulo', {}) %}
+{% set gc = g.get('config', {}) %}
+
+{%- set userhome          = '/home/accumulo' %}
+{%- set default_uid       = '6040' %}
+{%- set default_version   = '1.5.0' %}
+{%- set default_prefix    = '/usr/lib/accumulo' %}
+{%- set default_instance_name = 'accumulo' %}
+{%- set default_secret    = 'secret' %}
+{%- set default_log_root  = '/var/log/accumulo' %}
+{%- set default_log_level = 'WARN' %}
+{%- set default_memory_profile = '512MB' %}
+{%- set loglevels         = ['DEBUG', 'INFO', 'WARN', 'ERROR'] %}
+
+{%- set uid           = gc.get('uid', pc.get('uid', default_uid)) %}
+{%- set version       = g.get('version', p.get('version', default_version)) %}
+
+{%- set default_url   = 'http://www.us.apache.org/dist/accumulo/' + version + '/accumulo-' + version + '-bin.tar.gz' %}
+{%- set source_url    = g.get('source_url', p.get('source_url', default_url)) %}
+
+{%- set version_name  = 'accumulo-' + version %}
+{%- set prefix        = g.get('prefix', p.get('prefix', default_prefix)) %}
+{%- set instance_name = gc.get('instance_name', pc.get('instance_name', default_instance_name)) %}
+{%- set secret        = gc.get('secret', pc.get('secret', default_secret)) %}
+
 {%- set alt_config = salt['pillar.get']('accumulo:config:directory', '/etc/accumulo/conf') %}
 {%- set real_config = alt_config + '-' + version %}
 {%- set alt_home  = salt['pillar.get']('accumulo:prefix', '/usr/lib/accumulo') %}
@@ -19,27 +33,18 @@
 {%- set real_config_dist = alt_config + '.dist' %}
 {%- set java_home = salt['pillar.get']('java_home', '/usr/lib/java') %}
 
-{%- set zookeeper_prefix  = salt['pillar.get']('zookeeper:prefix', '/usr/lib/zookeeper') %}
-{%- set accumulo_default_loglevel = 'WARN' %}
-{%- set accumulo_loglevels = ['DEBUG', 'INFO', 'WARN', 'ERROR'] %}
-{%- set pillar_accumulo_ll = salt['pillar.get']('accumulo:config:loglevel', accumulo_default_loglevel) %}
-{%- set accumulo_ll = salt['grains.get']('accumulo:config:loglevel', pillar_accumulo_ll) %}
-{%- if accumulo_ll in accumulo_loglevels %}
-{%- set accumulo_loglevel = accumulo_ll %}
+{%- set log_root = gc.get('log_root', pc.get('log_root', default_log_root)) %}
+{%- set ll = gc.get('log_level', pc.get('log_level', default_log_level)) %}
+{%- if ll in loglevels %}
+{%- set log_level = ll %}
 {%- else %}
-{%- set accumulo_loglevel = accumulo_default_loglevel %}
+{%- set log_level = default_log_level %}
 {%- endif %}
-{%- set accumulo_default_profile = salt['grains.get']('accumulo:config:default_profile', '512MB') %}
-{%- set accumulo_profile = salt['grains.get']('accumulo:config:profile', accumulo_default_profile) %}
-{%- set accumulo_profile_dict = salt['pillar.get']('accumulo:config:accumulo-site-profiles:' + accumulo_profile, None) %}
-{%- set pillar_log_root = salt['pillar.get']('accumulo:config:logroot', '/var/log/accumulo' ) %}
-{%- set log_root = salt['grains.get']('accumulo:config:logroot', pillar_log_root ) %}
-{%- set test_suite_logroot = log_root + '/continuous_test' %}
-{%- set test_suite_home = '/home/accumulo/continuous_test' %}
+
+{%- set memory_profile = salt['grains.get']('accumulo:config:memory_profile', default_memory_profile) %}
 
 # TODO:
 {%- set namenode_host = salt['mine.get']('roles:hadoop_master', 'network.interfaces', 'grain').keys()|first() %}
-{%- set zookeeper_host = namenode_host %}
 {%- set accumulo_master = salt['mine.get']('roles:accumulo_master', 'network.interfaces', 'grain').keys()|first() %}
 {%- set accumulo_slaves = salt['mine.get']('roles:accumulo_slave', 'network.interfaces', 'grain').keys() %}
 
@@ -48,12 +53,10 @@
                           'version' : version,
                           'version_name': version_name,
                           'userhome' : userhome,
-                          'sources': None,
                           'source_url': source_url,
                           'prefix' : prefix,
                           'instance_name': instance_name,
                           'secret': secret,
-                          'log_root': log_root,
                           'alt_config' : alt_config,
                           'real_config' : real_config,
                           'alt_home' : alt_home,
@@ -61,14 +64,14 @@
                           'real_config_src' : real_config_src,
                           'real_config_dist' : real_config_dist,
                           'java_home' : java_home,
-                          'zookeeper_prefix' : zookeeper_prefix,
                           'namenode_host' : namenode_host,
                           'zookeeper_host' : zookeeper_host,
                           'accumulo_master' : accumulo_master,
                           'accumulo_slaves' : accumulo_slaves,
-                          'accumulo_loglevel' : accumulo_loglevel,
-                          'accumulo_default_profile' : accumulo_default_profile,
-                          'accumulo_profile' : accumulo_profile,
+                          'log_root': log_root,
+                          'log_level' : log_level,
+                          'default_memory_profile' : default_memory_profile,
+                          'memory_profile' : memory_profile,
                           'test_suite_home': test_suite_home,
                           'test_suite_logroot': test_suite_logroot,
                         }) %}

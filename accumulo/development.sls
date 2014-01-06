@@ -2,31 +2,22 @@ include:
   - accumulo
 
 {%- from 'hadoop/settings.sls' import hadoop with context %}
+{%- from 'zookeeper/settings.sls' import zk with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
-{%- if accumulo.sources %}
+{%- if accumulo.sources.source_url %}
 
-{%- set src_tgz = accumulo.sources.get('tgz', '') %}
-{%- set src_tgz_path = salt['pillar.get']('downloads_path', '/tmp') + '/' + src_tgz %}
-
-/tmp/{{ src_tgz }}:
-  file.managed:
-{%- if accumulo.sources %}
-    - source: {{ accumulo.sources.get('source') }}
-    - source_hash: {{ accumulo.sources.get('source_hash') }}
-{%- else %}
-    - source: salt://accumulo/files/{{ src_tgz }}
-{%- endif %}
-
-unpack-sources-to-userhome:
-  cmd.wait:
-    - name: tar xzf /tmp/{{ src_tgz }}
-    - cwd: /home/accumulo
+install-accumulo-src-dist:
+  cmd.run:
+    - name: curl '{{ accumulo.sources.source_url }}' | tar xz
+    - cwd: {{ accumulo.user_home }}
     - user: accumulo
-    - watch:
-      - file: /tmp/{{ src_tgz }}
+    - unless: test -d {{ accumulo.user_home + '/' + accumulo.sources.version_name }}
 
 {%- endif %}
+
+{%- set test_suite_logroot = accumulo.log_root + '/continuous_test' %}
+{%- set test_suite_home    = '/home/accumulo/continuous_test' %}
 
 copy-testsuite:
   cmd.run:
@@ -51,10 +42,10 @@ copy-testsuite:
     - context:
       accumulo_prefix: {{ accumulo.prefix }}
       hadoop_prefix: {{ hadoop.alt_home }}
-      zookeeper_prefix: {{ accumulo.zookeeper_prefix }}
+      zookeeper_prefix: {{ zk.prefix }}
       java_home: {{ accumulo.java_home }}
       instance_name: {{ accumulo.instance_name }}
-      zookeeper_host: {{ accumulo.zookeeper_host }}
+      zookeeper_host: {{ zk.zookeeper_host }}
       accumulo_log_root: {{ accumulo.log_root }}
       secret: {{ accumulo.secret }}
 

@@ -47,16 +47,16 @@ then
 	POLICY="-Djava.security.manager -Djava.security.policy={{ alt_config }}/accumulo.policy"
 fi
 
-{%- if accumulo_profile == "512MB" %}
+{%- if memory_profile == "512MB" %}
 {%- set worker_heap = '512m' %}
 {%- set mgr_heap = '256m' %}
-{%- elif accumulo_profile == "1GB" %}
+{%- elif memory_profile == "1GB" %}
 {%- set worker_heap = '1024m' %}
 {%- set mgr_heap = '512m' %}
-{%- elif accumulo_profile == "2GB" %}
+{%- elif memory_profile == "2GB" %}
 {%- set worker_heap = '2048m' %}
 {%- set mgr_heap = '1024m' %}
-{%- elif accumulo_profile == "3GB" %}
+{%- elif memory_profile == "3GB" %}
 {%- set worker_heap = '3072m' %}
 {%- set mgr_heap = '1536m' %}
 {%- else %}

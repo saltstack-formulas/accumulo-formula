@@ -5,6 +5,7 @@ include:
   - accumulo.native
 
 {%- from 'hadoop/settings.sls' import hadoop with context %}
+{%- from 'zookeeper/settings.sls' import zk with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
 /etc/accumulo:
@@ -27,16 +28,17 @@ include:
       hadoop_prefix: {{ hadoop.alt_home }}
       hadoop_config: {{ hadoop.alt_config }}
       alt_config: {{ accumulo.alt_config }}
-      zookeeper_prefix: {{ accumulo.zookeeper_prefix }}
+      zookeeper_prefix: {{ zk.prefix }}
       accumulo_logs: {{ accumulo.log_root }}
+      accumulo_loglevel: {{ accumulo.log_level }}
       namenode_host: {{ accumulo.namenode_host }}
-      zookeeper_host: {{ accumulo.zookeeper_host }}
+      zookeeper_host: {{ zk.zookeeper_host }}
       hadoop_major: {{ hadoop.major_version }}
+      hadoop_version: {{ hadoop.dist_id }}
       accumulo_master: {{ accumulo.accumulo_master }}
       accumulo_slaves: {{ accumulo.accumulo_slaves }}
-      accumulo_default_profile: {{ accumulo.accumulo_default_profile }}
-      accumulo_profile: {{ accumulo.accumulo_profile }}
-      accumulo_loglevel: {{ accumulo.accumulo_loglevel }}
+      default_memory_profile: {{ accumulo.default_memory_profile }}
+      memory_profile: {{ accumulo.memory_profile }}
       secret: {{ accumulo.secret }}
 
 move-accumulo-dist-conf:
@@ -107,7 +109,7 @@ set-accumulo-user-dir:
 
 check-zookeeper:
   cmd.run:
-    - name: {{ accumulo.zookeeper_prefix }}/bin/zkCli.sh ls / | tail -1 > /tmp/acc.status
+    - name: {{ zk.prefix }}/bin/zkCli.sh ls / | tail -1 > /tmp/acc.status
 
 init-accumulo:
   cmd.run:
