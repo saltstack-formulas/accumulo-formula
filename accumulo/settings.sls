@@ -15,14 +15,14 @@
 {%- set default_walogs    = '/var/lib/accumulo/walogs' %}
 {%- set loglevels         = ['DEBUG', 'INFO', 'WARN', 'ERROR'] %}
 
-{%- set uid            = gc.get('uid', pc.get('uid', default_uid)) %}
+{%- set uid            = g.get('uid', p.get('uid', default_uid)) %}
 {%- set version        = g.get('version', p.get('version', default_version)) %}
+{%- set prefix         = g.get('prefix', p.get('prefix', default_prefix)) %}
 
 {%- set default_url    = 'http://www.us.apache.org/dist/accumulo/' + version + '/accumulo-' + version + '-bin.tar.gz' %}
 {%- set source_url     = g.get('source_url', p.get('source_url', default_url)) %}
 
 {%- set version_name   = 'accumulo-' + version %}
-{%- set prefix         = g.get('prefix', p.get('prefix', default_prefix)) %}
 {%- set instance_name  = gc.get('instance_name', pc.get('instance_name', default_instance_name)) %}
 {%- set secret         = gc.get('secret', pc.get('secret', default_secret)) %}
 {%- set walogs         = gc.get('walogs', pc.get('walogs', default_walogs)) %}

@@ -1,11 +1,17 @@
+# these are just the expected config keys - if you are happy with the values then you don't need a pillar for accumulo at all
 accumulo:
+  uid: 6040
   version: 1.5.0
+  prefix: /usr/lib/accumulo
   source_url: http://www.us.apache.org/dist/accumulo/1.5.0/accumulo-1.5.0-bin.tar.gz
   sources:
     source_url: http://www.us.apache.org/dist/accumulo/1.5.0/accumulo-1.5.0-src.tar.gz
-    version_name:
+    version_name: accumulo-1.5.0
 
   config:
+    instance_name: accumulo
+    secret: secret
+    walogs: /var/lib/accumulo/walogs
     log_level: INFO # one of 'DEBUG', 'INFO', 'WARN', 'ERROR'
     log_root: /var/log/accumulo # only set if you have a small root partition or want to do accumulo debugging
     memory_profile: 512MB # one of '512MB', '1GB', '2GB', '3GB'
