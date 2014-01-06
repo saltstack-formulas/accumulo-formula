@@ -4,6 +4,7 @@ include:
   - accumulo
 
 {%- from 'accumulo/settings.sls' import accumulo with context %}
+{%- from 'zookeeper/settings.sls' import zk with context %}
 
 {{ accumulo.alt_config }}/proxy.properties:
   file.managed:
@@ -14,7 +15,7 @@ include:
     - group: root
     - context:
       accumulo_instance: {{ accumulo.instance_name }}
-      zookeeper_host: {{ accumulo.zookeeper_host }}
+      zookeeper_host: {{ zk.zookeeper_host }}
       proxy_port: 50096
       proxy_max_framesize: 16M
 

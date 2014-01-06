@@ -12,6 +12,7 @@
 {%- set default_log_root  = '/var/log/accumulo' %}
 {%- set default_log_level = 'WARN' %}
 {%- set default_memory_profile = '512MB' %}
+{%- set default_walogs    = '/var/lib/accumulo/walogs' %}
 {%- set loglevels         = ['DEBUG', 'INFO', 'WARN', 'ERROR'] %}
 
 {%- set uid           = gc.get('uid', pc.get('uid', default_uid)) %}
@@ -24,6 +25,7 @@
 {%- set prefix        = g.get('prefix', p.get('prefix', default_prefix)) %}
 {%- set instance_name = gc.get('instance_name', pc.get('instance_name', default_instance_name)) %}
 {%- set secret        = gc.get('secret', pc.get('secret', default_secret)) %}
+{%- set walogs        = gc.get('walogs', pc.get('walogs', default_walogs)) %}
 
 {%- set alt_config = salt['pillar.get']('accumulo:config:directory', '/etc/accumulo/conf') %}
 {%- set real_config = alt_config + '-' + version %}
@@ -64,6 +66,7 @@
                           'real_config_src' : real_config_src,
                           'real_config_dist' : real_config_dist,
                           'java_home' : java_home,
+                          'walogs': walogs,
                           'namenode_host' : namenode_host,
                           'zookeeper_host' : zookeeper_host,
                           'accumulo_master' : accumulo_master,

@@ -29,10 +29,12 @@ include:
       hadoop_config: {{ hadoop.alt_config }}
       alt_config: {{ accumulo.alt_config }}
       zookeeper_prefix: {{ zk.prefix }}
+      accumulo_walogs: {{ accumulo.walogs }}
       accumulo_logs: {{ accumulo.log_root }}
       accumulo_loglevel: {{ accumulo.log_level }}
       namenode_host: {{ accumulo.namenode_host }}
       zookeeper_host: {{ zk.zookeeper_host }}
+      zookeeper_port: {{ zk.port }}
       hadoop_major: {{ hadoop.major_version }}
       hadoop_version: {{ hadoop.dist_id }}
       accumulo_master: {{ accumulo.accumulo_master }}
