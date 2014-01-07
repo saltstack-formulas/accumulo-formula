@@ -8,9 +8,9 @@ include:
 install-accumulo-src-dist:
   cmd.run:
     - name: curl '{{ accumulo.sources.source_url }}' | tar xz
-    - cwd: {{ accumulo.user_home }}
+    - cwd: {{ accumulo.userhome }}
     - user: accumulo
-    - unless: test -d {{ accumulo.user_home + '/' + accumulo.sources.version_name }}
+    - unless: test -d {{ accumulo.userhome + '/' + accumulo.sources.version_name }}
 
 {%- endif %}
 
