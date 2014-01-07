@@ -97,6 +97,11 @@ accumulo-home-link:
     - require:
       - cmd.run: install-accumulo-dist
 
+{{ accumulo.real_home }}/lib/ext:
+  file.directory:
+    - user: root
+    - group: root
+
 {{ accumulo.real_home }}:
   file.directory:
     - user: root
