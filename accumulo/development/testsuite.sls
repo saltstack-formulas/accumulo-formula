@@ -5,36 +5,25 @@ include:
 {%- from 'zookeeper/settings.sls' import zk with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
-{%- if accumulo.sources.source_url %}
-
-install-accumulo-src-dist:
-  cmd.run:
-    - name: curl '{{ accumulo.sources.source_url }}' | tar xz
-    - cwd: {{ accumulo.user_home }}
-    - user: accumulo
-    - unless: test -d {{ accumulo.user_home + '/' + accumulo.sources.version_name }}
-
-{%- endif %}
-
 {%- set test_suite_logroot = accumulo.log_root + '/continuous_test' %}
 {%- set test_suite_home    = '/home/accumulo/continuous_test' %}
 
 copy-testsuite:
   cmd.run:
     - user: accumulo
-    - name: cp -r {{ accumulo.prefix }}/test/system/continuous {{ accumulo.test_suite_home }}
-    - unless: test -d {{ accumulo.test_suite_home }}
+    - name: cp -r {{ accumulo.prefix }}/test/system/continuous {{ test_suite_home }}
+    - unless: test -d {{ test_suite_home }}
 
-{{ accumulo.test_suite_logroot }}:
+{{ test_suite_logroot }}:
   file.directory:
     - user: accumulo
     - group: accumulo
 
-{{ accumulo.test_suite_home }}/logs:
+{{ test_suite_home }}/logs:
   file.symlink:
-    - target: {{ accumulo.test_suite_logroot }}
+    - target: {{ test_suite_logroot }}
 
-{{ accumulo.test_suite_home }}/continuous-env.sh:
+{{ test_suite_home }}/continuous-env.sh:
   file.managed:
     - user: accumulo
     - source: salt://accumulo/testconf/continuous-env.sh
@@ -49,16 +38,18 @@ copy-testsuite:
       accumulo_log_root: {{ accumulo.log_root }}
       secret: {{ accumulo.secret }}
 
-{{ accumulo.test_suite_home }}/ingesters.txt:
+{{ test_suite_home }}/ingesters.txt:
   file.managed:
     - user: accumulo
     - contents: {{ accumulo.accumulo_master }}
 
+# continuous test suite relies on pssh
 {%- if grains['os'] in ['Amazon', 'Ubuntu'] %}
 pssh:
   pkg.installed
 {%- endif %}
 
+# fix the ubuntu packaging decision to leave the name pssh for putty
 {%- if grains['os'] in ['Ubuntu'] %}
 /usr/local/bin/pssh:
   file.symlink:
