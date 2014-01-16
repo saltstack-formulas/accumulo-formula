@@ -159,14 +159,15 @@
       $ACCUMULO_HOME/lib/accumulo-proxy.jar,
       $ACCUMULO_HOME/lib/[^.].*.jar,
       $ZOOKEEPER_HOME/zookeeper[^.].*.jar,
-      <!-- assuming classpath for hadoop {{ hadoop_major }}.x ({{ hadoop_version }}) -->
-{%- if hadoop_major != '1' %}
+{%- if hadoop_major != 1 %}
+      <!-- assuming classpath for hadoop 2 ({{ hadoop_version }}) -->
       $HADOOP_PREFIX/share/hadoop/common/.*.jar,
       $HADOOP_PREFIX/share/hadoop/common/lib/.*.jar,
       $HADOOP_PREFIX/share/hadoop/hdfs/.*.jar,
       $HADOOP_PREFIX/share/hadoop/mapreduce/.*.jar,
       $HADOOP_PREFIX/share/hadoop/yarn/.*.jar,
 {%- else %}
+      <!-- assuming classpath for hadoop 1 ({{ hadoop_version }}) -->
       $HADOOP_PREFIX/[^.].*.jar,
       $HADOOP_PREFIX/lib/[^.].*.jar,
 {%- endif %}
