@@ -9,15 +9,17 @@
 {%- set default_prefix    = '/usr/lib/accumulo' %}
 {%- set default_instance_name = 'accumulo' %}
 {%- set default_secret    = 'secret' %}
-{%- set default_log_root  = '/var/log/accumulo' %}
-{%- set default_log_level = 'WARN' %}
 {%- set default_memory_profile = '512MB' %}
 {%- set default_walogs    = '/var/lib/accumulo/walogs' %}
+{%- set default_confdir   = '/etc/accumulo/conf' %}
 {%- set loglevels         = ['DEBUG', 'INFO', 'WARN', 'ERROR'] %}
+{%- set default_log_root  = '/var/log/accumulo' %}
+{%- set default_log_level = 'WARN' %}
 
 {%- set uid            = g.get('uid', p.get('uid', default_uid)) %}
 {%- set version        = g.get('version', p.get('version', default_version)) %}
 {%- set prefix         = g.get('prefix', p.get('prefix', default_prefix)) %}
+{%- set alt_home       = prefix %}
 
 {%- set default_url    = 'http://www.us.apache.org/dist/accumulo/' + version + '/accumulo-' + version + '-bin.tar.gz' %}
 {%- set source_url     = g.get('source_url', p.get('source_url', default_url)) %}
@@ -26,23 +28,22 @@
 {%- set instance_name  = gc.get('instance_name', pc.get('instance_name', default_instance_name)) %}
 {%- set secret         = gc.get('secret', pc.get('secret', default_secret)) %}
 {%- set walogs         = gc.get('walogs', pc.get('walogs', default_walogs)) %}
-{%- set memory_profile = salt['grains.get']('accumulo:config:memory_profile', default_memory_profile) %}
+{%- set memory_profile = gc.get('memory_profile', pc.get('memory_profile', default_memory_profile)) %}
+{%- set alt_config     = gc.get('directory', pc.get('directory', default_confdir)) %}
+{%- set log_root       = gc.get('log_root', pc.get('log_root', default_log_root)) %}
+{%- set ll             = gc.get('log_level', pc.get('log_level', default_log_level)) %}
 
-{%- set alt_config = salt['pillar.get']('accumulo:config:directory', '/etc/accumulo/conf') %}
-{%- set real_config = alt_config + '-' + version %}
-{%- set alt_home  = salt['pillar.get']('accumulo:prefix', '/usr/lib/accumulo') %}
-{%- set real_home = alt_home + '-' + version %}
-{%- set real_config_src = real_home + '/conf' %}
-{%- set real_config_dist = alt_config + '.dist' %}
-{%- set java_home = salt['pillar.get']('java_home', '/usr/lib/java') %}
-
-{%- set log_root = gc.get('log_root', pc.get('log_root', default_log_root)) %}
-{%- set ll = gc.get('log_level', pc.get('log_level', default_log_level)) %}
 {%- if ll in loglevels %}
 {%- set log_level = ll %}
 {%- else %}
 {%- set log_level = default_log_level %}
 {%- endif %}
+
+{%- set real_config      = alt_config + '-' + version %}
+{%- set real_home        = alt_home + '-' + version %}
+{%- set real_config_src  = real_home + '/conf' %}
+{%- set real_config_dist = alt_config + '.dist' %}
+{%- set java_home        = salt['pillar.get']('java_home', '/usr/lib/java') %}
 
 {%- set accumulo_master = salt['mine.get']('roles:accumulo_master', 'network.interfaces', 'grain').keys()|first() %}
 {%- set accumulo_slaves = salt['mine.get']('roles:accumulo_slave', 'network.interfaces', 'grain').keys() %}
@@ -70,5 +71,4 @@
                           'log_level' : log_level,
                           'memory_profile' : memory_profile,
                           'sources': g.get('sources', p.get('sources', {})),
-                          'native': g.get('native', p.get('native', {})),
                         }) %}

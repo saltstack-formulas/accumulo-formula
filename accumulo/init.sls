@@ -141,6 +141,7 @@ accumulo-home-link:
       zookeeper_port: {{ zk.port }}
       hadoop_major: {{ hadoop.major_version }}
       hadoop_version: {{ hadoop.dist_id }}
+      hadoop_cdhmr1: {{ hadoop.cdhmr1 }}
       accumulo_master: {{ accumulo.accumulo_master }}
       accumulo_slaves: {{ accumulo.accumulo_slaves }}
       memory_profile: {{ accumulo.memory_profile }}
