@@ -4,51 +4,15 @@ include:
   - accumulo.native
 
 {%- from 'hadoop/settings.sls' import hadoop with context %}
+{%- from 'hadoop/hdfs_mkdir_macro.sls' import hdfs_mkdir with context %}
 {%- from 'zookeeper/settings.sls' import zk with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
 {%- if 'accumulo_master' in salt['grains.get']('roles', []) %}
 
-make-accumulo-dir:
-  cmd.run:
-    - user: hdfs
-    - name: {{ hadoop.dfs_cmd }} -mkdir /accumulo
-    - unless: {{ hadoop.dfs_cmd }} -stat /accumulo
-    - require:
-      - service: hdfs-services
-      - service: zookeeper-service
-
-set-accumulo-dir:
-  cmd.wait:
-    - user: hdfs
-    - watch:
-      - cmd: make-accumulo-dir
-    - names:
-      - {{ hadoop.dfs_cmd }} -chmod 700 /accumulo
-      - {{ hadoop.dfs_cmd }} -chown accumulo /accumulo
-
-make-user-dir:
-  cmd.run:
-    - user: hdfs
-    - name: {{ hadoop.dfs_cmd }} -mkdir /user
-    - unless: {{ hadoop.dfs_cmd }} -stat /user
-
-make-accumulo-user-dir:
-  cmd.wait:
-    - user: hdfs
-    - name: {{ hadoop.dfs_cmd }} -mkdir /user/accumulo
-    - unless: {{ hadoop.dfs_cmd }} -stat /user/accumulo
-    - watch:
-      - cmd: make-user-dir
-
-set-accumulo-user-dir:
-  cmd.wait:
-    - user: hdfs
-    - watch:
-      - cmd: make-accumulo-user-dir
-    - names:
-      - {{ hadoop.dfs_cmd }} -chmod 700 /user/accumulo
-      - {{ hadoop.dfs_cmd }} -chown accumulo /user/accumulo
+{{ hdfs_mkdir('/accumulo',      'accumulo', None, 700, hadoop.dfs_cmd) }}
+{{ hdfs_mkdir('/user',          'hdfs',     None, 700, hadoop.dfs_cmd) }}
+{{ hdfs_mkdir('/user/accumulo', 'accumulo', None, 700, hadoop.dfs_cmd) }}
 
 check-zookeeper:
   cmd.run:
