@@ -11,7 +11,7 @@ include:
 {%- if 'accumulo_master' in salt['grains.get']('roles', []) %}
 
 {{ hdfs_mkdir('/accumulo',      'accumulo', None, 700, hadoop.dfs_cmd) }}
-{{ hdfs_mkdir('/user',          'hdfs',     None, 700, hadoop.dfs_cmd) }}
+{{ hdfs_mkdir('/user',          'hdfs',     None, 755, hadoop.dfs_cmd) }}
 {{ hdfs_mkdir('/user/accumulo', 'accumulo', None, 700, hadoop.dfs_cmd) }}
 
 check-zookeeper:
