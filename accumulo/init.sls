@@ -32,6 +32,12 @@ accumulo:
       - /var/run/accumulo
       - /var/lib/accumulo
 
+{%- if accumulo.log_root != '/var/log/accumulo' %}
+/var/log/accumulo:
+  file.symlink:
+    - target: {{ accumulo.log_root }}
+{%- endif %}
+
 {{ accumulo.userhome }}/.ssh:
   file.directory:
     - user: accumulo
