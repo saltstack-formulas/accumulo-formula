@@ -38,10 +38,19 @@ copy-testsuite:
       accumulo_log_root: {{ accumulo.log_root }}
       secret: {{ accumulo.secret }}
 
-{{ test_suite_home }}/ingesters.txt:
+add-controlfiles:
   file.managed:
     - user: accumulo
-    - contents: {{ accumulo.accumulo_master }}
+    - contents: |
+{%- for h in accumulo.accumulo_slaves %}
+        {{ h }}
+{%- endfor %}
+    - names:
+      - {{ test_suite_home }}/ingesters.txt
+      - {{ test_suite_home }}/walkers.txt
+      - {{ test_suite_home }}/batch_walkers.txt
+      - {{ test_suite_home }}/scanners.txt
+
 
 # continuous test suite relies on pssh
 {%- if grains['os'] in ['Amazon', 'Ubuntu'] %}
