@@ -19,7 +19,7 @@ ACCUMULO_HOME={{ accumulo_prefix }}
 JAVA_HOME={{ java_home }}
 ZOOKEEPER_HOME={{ zookeeper_prefix }}
 
-CONTINUOUS_LOG_DIR={{ accumulo_log_root }}/continuous-test
+CONTINUOUS_LOG_DIR={{ continuous_log_root }}
 INSTANCE_NAME={{ instance_name }}
 ZOO_KEEPERS={{ zookeeper_host }}
 USER=root

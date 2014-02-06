@@ -43,8 +43,8 @@ copy-testsuite:
       java_home: {{ accumulo.java_home }}
       instance_name: {{ accumulo.instance_name }}
       zookeeper_host: {{ zk.zookeeper_host }}
-      accumulo_log_root: {{ accumulo.log_root }}
       secret: {{ accumulo.secret }}
+      continuous_log_root: {{ test_suite_logroot }}
 
 add-controlfiles:
   file.managed:
