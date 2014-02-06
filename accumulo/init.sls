@@ -8,6 +8,7 @@ redhat-lsb-core:
 {% endif %}
 
 {%- from 'hadoop/settings.sls' import hadoop with context %}
+{%- from 'hadoop/hdfs/settings.sls' import hdfs with context %}
 {%- from 'zookeeper/settings.sls' import zk with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
@@ -142,7 +143,7 @@ accumulo-home-link:
       accumulo_walogs: {{ accumulo.walogs }}
       accumulo_logs: {{ accumulo.log_root }}
       accumulo_loglevel: {{ accumulo.log_level }}
-      namenode_host: {{ hadoop.namenode_host }}
+      namenode_host: {{ hdfs.namenode_host }}
       zookeeper_host: {{ zk.zookeeper_host }}
       zookeeper_port: {{ zk.port }}
       hadoop_major: {{ hadoop.major_version }}

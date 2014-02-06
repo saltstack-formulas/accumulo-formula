@@ -19,6 +19,14 @@ copy-testsuite:
     - user: accumulo
     - group: accumulo
 
+{{ test_suite_home}}/create_ci_table:
+  file.managed:
+    - user: accumulo
+    - group: accumulo
+    - mode: 755
+    - contents: |
+        accumulo shell -u root -p {{ accumulo.secret }} -e "createtable ci"
+
 {{ test_suite_home }}/logs:
   file.symlink:
     - target: {{ test_suite_logroot }}
