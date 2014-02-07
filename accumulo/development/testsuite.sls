@@ -11,7 +11,7 @@ include:
 copy-testsuite:
   cmd.run:
     - user: accumulo
-    - name: cp -r {{ accumulo.prefix }}/test/system/continuous {{ test_suite_home }}
+    - name: rsync -r --exclude logs {{ accumulo.prefix }}/test/system/continuous {{ test_suite_home }}
     - unless: test -d {{ test_suite_home }}
 
 {{ test_suite_logroot }}:
