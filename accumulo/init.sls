@@ -1,6 +1,7 @@
 include:
   - hadoop
   - hadoop.snappy
+  - zookeeper
 
 {%- if grains['os_family'] in ['RedHat'] %}
 redhat-lsb-core:
