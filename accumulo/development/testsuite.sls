@@ -27,6 +27,18 @@ copy-testsuite:
     - contents: |
         accumulo shell -u root -p {{ accumulo.secret }} -e "createtable ci"
 
+# the run-verify.sh script for some reason tries to find jar files in hdfs
+# this script can be used to put them there
+{{ test_suite_home}}/prepare_accumulo_run_verify.sh:
+  file.managed:
+    - source: salt://accumulo/testconf/prepare_verify_hack.sh
+    - mode: 755
+    - user: hdfs
+    - group: hadoop
+    - template: jinja
+    - context:
+      dfs_command: {{ hadoop.dfs_cmd }}
+
 {{ test_suite_home }}/logs:
   file.symlink:
     - target: {{ test_suite_logroot }}
