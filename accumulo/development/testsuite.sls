@@ -11,7 +11,7 @@ include:
 copy-testsuite:
   cmd.run:
     - user: accumulo
-    - name: rsync -r --exclude logs {{ accumulo.prefix }}/test/system/continuous {{ test_suite_home }}
+    - name: rsync -r --exclude logs {{ accumulo.prefix }}/test/system/continuous/* {{ test_suite_home }}
     - unless: test -d {{ test_suite_home }}
 
 {{ test_suite_logroot }}:
@@ -64,6 +64,11 @@ add-controlfiles:
 {%- if grains['os'] in ['Amazon', 'Ubuntu'] %}
 pssh:
   pkg.installed
+{%- elif grains['os'] in ['CentOS'] %}
+install-pssh-directly:
+  cmd.run:
+    - name: yum -y install ftp://fr2.rpmfind.net/linux/dag/redhat/el6/en/x86_64/dag/RPMS/pssh-2.3-1.el6.rf.noarch.rpm
+    - unless: test -x /usr/bin/pssh
 {%- endif %}
 
 # fix the ubuntu packaging decision to leave the name pssh for putty
