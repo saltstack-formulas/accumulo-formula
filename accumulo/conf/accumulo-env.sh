@@ -65,9 +65,9 @@ fi
 {%- endif %}
 
 export JMX_OPTS=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote -Djava.rmi.server.hostname=127.0.0.1"
-
+MASTER_OOM_OPTS="-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$ACCUMULO_LOG_DIR/master.hpro"
 test -z "$ACCUMULO_TSERVER_OPTS" && export ACCUMULO_TSERVER_OPTS="$JMX_OPTS -Dcom.sun.management.jmxremote.port=26051 ${POLICY} -Xmx{{ worker_heap }} -Xms128m "
-test -z "$ACCUMULO_MASTER_OPTS"  && export ACCUMULO_MASTER_OPTS="$JMX_OPTS -Dcom.sun.management.jmxremote.port=26052 ${POLICY} -Xmx{{ worker_heap }} -Xms128m"
+test -z "$ACCUMULO_MASTER_OPTS"  && export ACCUMULO_MASTER_OPTS="$MASTER_OOM_OPTS $JMX_OPTS -Dcom.sun.management.jmxremote.port=26052 ${POLICY} -Xmx{{ worker_heap }} -Xms128m"
 test -z "$ACCUMULO_MONITOR_OPTS" && export ACCUMULO_MONITOR_OPTS="$JMX_OPTS -Dcom.sun.management.jmxremote.port=26053 ${POLICY} -Xmx{{ mgr_heap }} -Xms64m"
 test -z "$ACCUMULO_GC_OPTS"      && export ACCUMULO_GC_OPTS="$JMX_OPTS -Dcom.sun.management.jmxremote.port=26054 -Xmx{{ mgr_heap }} -Xms64m"
 test -z "$ACCUMULO_GENERAL_OPTS" && export ACCUMULO_GENERAL_OPTS="-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75"
