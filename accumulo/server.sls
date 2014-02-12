@@ -1,6 +1,4 @@
 include:
-  - zookeeper.server
-  - hadoop.hdfs
   - accumulo.native
 
 {%- from 'hadoop/settings.sls' import hadoop with context %}

@@ -1,8 +1,3 @@
-include:
-  - hadoop
-  - hadoop.snappy
-  - zookeeper
-
 {%- if grains['os_family'] in ['RedHat'] %}
 redhat-lsb-core:
   pkg.installed
@@ -22,9 +17,6 @@ accumulo:
     - shell: /bin/bash
     - home: {{ accumulo.userhome }}
     - groups: ['hadoop']
-    - require:
-      - group: hadoop
-      - group: accumulo
   file.directory:
     - user: accumulo
     - group: accumulo
@@ -45,9 +37,6 @@ accumulo:
     - user: accumulo
     - group: accumulo
     - mode: 744
-    - require:
-      - user: accumulo
-      - group: accumulo
 
 accumulo_private_key:
   file.managed:
@@ -56,8 +45,6 @@ accumulo_private_key:
     - group: accumulo
     - mode: 600
     - source: salt://accumulo/files/dsa-accumulo
-    - require:
-      - file.directory: {{ accumulo.userhome }}/.ssh
 
 accumulo_public_key:
   file.managed:
@@ -66,8 +53,6 @@ accumulo_public_key:
     - group: accumulo
     - mode: 644
     - source: salt://accumulo/files/dsa-accumulo.pub
-    - require:
-      - file.managed: accumulo_private_key
 
 ssh_dss_accumulo:
   ssh_auth.present:
@@ -82,8 +67,6 @@ ssh_dss_accumulo:
     - user: accumulo
     - group: accumulo
     - mode: 644
-    - require:
-      - file.directory: {{ accumulo.userhome }}/.ssh
 
 {{ accumulo.userhome }}/.bashrc:
   file.append:
