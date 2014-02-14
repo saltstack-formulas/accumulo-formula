@@ -74,6 +74,16 @@ ssh_dss_accumulo:
       - export PATH=$PATH:/usr/lib/accumulo/bin
       - export CONTINUOUS_CONF_DIR=/home/accumulo/continuous_test
 
+/etc/security/limits.d/98-accumulo.conf:
+  file.managed:
+    - mode: 644
+    - user: root
+    - contents: |
+        accumulo soft nofile 65536
+        accumulo hard nofile 65536
+        accumulo soft nproc 8092
+        accumulo hard nproc 8092
+
 install-accumulo-dist:
   cmd.run:
     - name: curl '{{ accumulo.source_url }}' | tar xz
