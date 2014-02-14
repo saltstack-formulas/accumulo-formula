@@ -92,3 +92,11 @@ install-pssh-directly:
       - pkg: pssh
 {%- endif %}
 
+{{ test_suite_home }}/splits:
+  file.recurse:
+    - source: salt://accumulo/development/splits
+    - user: accumulo
+    - group: accumulo
+    - dir_mode: 755
+    - file_mode: 644
+
