@@ -15,6 +15,8 @@ include:
 check-zookeeper:
   cmd.run:
     - name: {{ zk.prefix }}/bin/zkCli.sh -server {{ zk.zookeeper_host }}:{{zk.port}} ls / | tail -1 > /tmp/acc.status
+    - env:
+      - JAVA_HOME: {{ accumulo.java_home }}
 
 init-accumulo:
   cmd.run:
