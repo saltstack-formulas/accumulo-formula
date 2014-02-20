@@ -1,6 +1,6 @@
-===
+========
 accumulo
-===
+========
 
 Formula to set up and configure accumulo servers
 
@@ -16,7 +16,7 @@ Available states
     :local:
 
 ``accumulo``
--------
+------------
 
 Downloads the accumulo tarball from accumulo:source_url, installs the package.
 
