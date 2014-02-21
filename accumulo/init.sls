@@ -16,7 +16,6 @@ accumulo:
     - gid: {{ accumulo.uid }}
     - shell: /bin/bash
     - home: {{ accumulo.userhome }}
-    - groups: ['hadoop']
   file.directory:
     - user: accumulo
     - group: accumulo
@@ -26,6 +25,13 @@ accumulo:
       - /var/run/accumulo
       - /var/lib/accumulo
 
+# if this is used instead of the groups user attribute, consecutive formulas can add groups
+make-accumulo-a-hadoop-user:
+  cmd.run:
+    - name: usermod -G hadoop accumulo
+    - unless: id accumulo | grep hadoop
+
+# even if we end up using an alternative log path it would be nice to point to it from the default location
 {%- if accumulo.log_root != '/var/log/accumulo' %}
 /var/log/accumulo:
   file.symlink:
