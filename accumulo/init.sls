@@ -65,7 +65,7 @@ ssh_dss_accumulo:
     - user: accumulo
     - source: salt://accumulo/files/dsa-accumulo.pub
     - require:
-      - file.managed: accumulo_private_key
+      - file: accumulo_private_key
 
 {{ accumulo.userhome }}/.ssh/config:
   file.managed:
@@ -104,7 +104,7 @@ accumulo-home-link:
     - path: {{ accumulo.real_home }}
     - priority: 30
     - require:
-      - cmd.run: install-accumulo-dist
+      - cmd: install-accumulo-dist
 
 {{ accumulo.real_home }}/lib/ext:
   file.directory:
@@ -160,8 +160,8 @@ move-accumulo-dist-conf:
     - unless: test -L {{ accumulo.real_config_src }}
     - onlyif: test -d {{ accumulo.real_config_src }}
     - require:
-      - file.directory: {{ accumulo.real_home }}
-      - file.directory: /etc/accumulo
+      - file: {{ accumulo.real_home }}
+      - file: /etc/accumulo
 
 {{ accumulo.real_config_src }}:
   file.symlink:
@@ -175,4 +175,4 @@ accumulo-conf-link:
     - path: {{ accumulo.real_config }}
     - priority: 30
     - require:
-      - file.directory: {{ accumulo.real_config }}
+      - file: {{ accumulo.real_config }}
