@@ -77,7 +77,7 @@ ssh_dss_accumulo:
 {{ accumulo.userhome }}/.bashrc:
   file.append:
     - text:
-      - export PATH=$PATH:/usr/lib/accumulo/bin
+      - export PATH=$PATH:{{ accumulo.alt_home }}/bin:{{ hadoop.alt_home }}/bin:{{ zk.alt_home }}/bin
       - export CONTINUOUS_CONF_DIR=/home/accumulo/continuous_test
 
 /etc/security/limits.d/98-accumulo.conf:
