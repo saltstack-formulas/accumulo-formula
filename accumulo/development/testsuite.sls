@@ -1,6 +1,3 @@
-include:
-  - accumulo
-
 {%- from 'hadoop/settings.sls' import hadoop with context %}
 {%- from 'zookeeper/settings.sls' import zk with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}

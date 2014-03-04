@@ -1,8 +1,5 @@
 {%- if 'accumulo_proxy' in salt['grains.get']('roles', []) %}
 
-include:
-  - accumulo
-
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 {%- from 'zookeeper/settings.sls' import zk with context %}
 

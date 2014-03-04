@@ -1,6 +1,3 @@
-include:
-  - accumulo
-
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
 {%- if accumulo.sources.source_url is defined %}

@@ -1,6 +1,3 @@
-include:
-  - accumulo.native
-
 {%- from 'hadoop/settings.sls' import hadoop with context %}
 {%- from 'hadoop/hdfs_mkdir_macro.sls' import hdfs_mkdir with context %}
 {%- from 'zookeeper/settings.sls' import zk with context %}

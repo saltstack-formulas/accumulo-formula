@@ -1,6 +1,3 @@
-include:
-  - accumulo
-
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
 compile-accumulo-native-lib:
