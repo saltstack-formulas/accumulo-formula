@@ -5,7 +5,7 @@
 
 {%- set userhome          = '/home/accumulo' %}
 {%- set default_uid       = '6040' %}
-{%- set default_version   = '1.5.0' %}
+{%- set default_version   = '1.5.1' %}
 {%- set default_prefix    = '/usr/lib/accumulo' %}
 {%- set default_instance_name = 'accumulo' %}
 {%- set default_secret    = 'secret' %}
