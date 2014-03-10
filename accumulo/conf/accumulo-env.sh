@@ -60,8 +60,8 @@ fi
 {%- set worker_heap = '3072m' %}
 {%- set mgr_heap = '1536m' %}
 {%- else %}
-{%- set worker_heap = '256m' %}
-{%- set mgr_heap = '128m' %}
+{%- set worker_heap = manual_worker_heap %}
+{%- set mgr_heap    = manual_mgr_heap %}
 {%- endif %}
 
 TSERVER_DBG="{{ salt['grains.get']('accumulo:config:debug_opts:tserver', '') }}"

@@ -46,7 +46,9 @@
         <!-- change this to the root user's password, and/or change the user below -->
         <value>{{ secret }}</value>
     </property>
-{% if memory_profile == '1GB' %}
+{% if memory_profile == 'manual' %}
+    <!-- memory configuration profile deactivated -->
+{% elif memory_profile == '1GB' %}
     <!-- profile 1GB -->
     <property>
         <name>tserver.sort.buffer.size</name>

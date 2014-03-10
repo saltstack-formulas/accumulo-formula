@@ -12,6 +12,8 @@
 {%- set default_memory_profile = '512MB' %}
 {%- set default_walogs    = '/var/lib/accumulo/walogs' %}
 {%- set default_confdir   = '/etc/accumulo/conf' %}
+{%- set default_worker_heap = '1024m' %}
+{%- set default_mgr_heap    = '512m' %}
 {%- set loglevels         = ['DEBUG', 'INFO', 'WARN', 'ERROR'] %}
 {%- set default_log_root  = '/var/log/accumulo' %}
 {%- set default_log_level = 'WARN' %}
@@ -29,6 +31,8 @@
 {%- set secret         = gc.get('secret', pc.get('secret', default_secret)) %}
 {%- set walogs         = gc.get('walogs', pc.get('walogs', default_walogs)) %}
 {%- set memory_profile = gc.get('memory_profile', pc.get('memory_profile', default_memory_profile)) %}
+{%- set worker_heap    = gc.get('worker_heap', pc.get('worker_heap', default_worker_heap)) %}
+{%- set mgr_heap       = gc.get('mgr_heap', pc.get('mgr_heap', default_mgr_heap)) %}
 {%- set alt_config     = gc.get('directory', pc.get('directory', default_confdir)) %}
 {%- set log_root       = gc.get('log_root', pc.get('log_root', default_log_root)) %}
 {%- set ll             = gc.get('log_level', pc.get('log_level', default_log_level)) %}
@@ -71,4 +75,6 @@
                           'log_level' : log_level,
                           'memory_profile' : memory_profile,
                           'sources': g.get('sources', p.get('sources', {})),
+                          'worker_heap': worker_heap,
+                          'mgr_heap': mgr_heap,
                         }) %}

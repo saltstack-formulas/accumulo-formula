@@ -14,7 +14,19 @@ accumulo:
     walogs: /var/lib/accumulo/walogs
     log_level: INFO # one of 'DEBUG', 'INFO', 'WARN', 'ERROR'
     log_root: /var/log/accumulo # only set if you have a small root partition or want to do accumulo debugging
-    memory_profile: 512MB # one of '512MB', '1GB', '2GB', '3GB'
+    memory_profile: 512MB # one of [<'512MB'>, '1GB', '2GB', '3GB', 'manual']
+    # OR: you can set
+    #  memory_profile: manual
+    #  worker_heap: 8196m #(tserver and master are considered workers)
+    #  mgr_heap: 1024m #(gc, monitor and tracer are considered managers)
+    # and in the accumulo-site section below set any other memory-related attributes that are normally part of the profile,
+    # there are no salt-provided defaults for these in manual mode!
+    # like
+    #  tserver.sort.buffer.size,
+    #  tserver.cache.index.size,
+    #  tserver.memory.maps.max,
+    #  tserver.cache.data.size,
+    #  tserver.walog.max.size
     - accumulo-site:
       trace.user:
         value: root

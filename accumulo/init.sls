@@ -153,6 +153,8 @@ accumulo-home-link:
       accumulo_slaves: {{ accumulo.accumulo_slaves }}
       memory_profile: {{ accumulo.memory_profile }}
       secret: {{ accumulo.secret }}
+      manual_worker_heap: {{ accumulo.worker_heap }}
+      manual_mgr_heap: {{ accumulo.mgr_heap }}
 
 move-accumulo-dist-conf:
   cmd.run:
