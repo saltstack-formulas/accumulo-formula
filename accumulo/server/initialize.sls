@@ -1,9 +1,10 @@
-{%- from 'hadoop/settings.sls' import hadoop with context %}
 {%- from 'hadoop/hdfs_mkdir_macro.sls' import hdfs_mkdir with context %}
+{%- from 'hadoop/settings.sls' import hadoop with context %}
 {%- from 'zookeeper/settings.sls' import zk with context %}
 {%- from 'accumulo/settings.sls' import accumulo with context %}
+{%- set all_roles    = salt['grains.get']('roles', []) %}
 
-{%- if 'accumulo_master' in salt['grains.get']('roles', []) %}
+{%- if 'accumulo_master' in all_roles %}
 
 {{ hdfs_mkdir('/accumulo',      'accumulo', None, 700, hadoop.dfs_cmd) }}
 {{ hdfs_mkdir('/user',          'hdfs',     None, 755, hadoop.dfs_cmd) }}
@@ -25,16 +26,4 @@ init-accumulo:
       - HADOOP_PREFIX: {{ hadoop.alt_home }}
       - HADOOP_CONF_DIR: {{ hadoop.alt_config }}
 
-start-all:
-  cmd.run:
-    - user: accumulo
-    - name: {{accumulo.prefix}}/bin/start-all.sh
-
-{%- elif 'accumulo_slave' in salt['grains.get']('roles', []) %}
-
-start-all:
-  cmd.run:
-    - user: accumulo
-    - name: {{accumulo.prefix}}/bin/start-here.sh
-
-{% endif %}
+{%- endif %}
