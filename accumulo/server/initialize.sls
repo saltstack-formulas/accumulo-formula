@@ -26,18 +26,4 @@ init-accumulo:
       - HADOOP_PREFIX: {{ hadoop.alt_home }}
       - HADOOP_CONF_DIR: {{ hadoop.alt_config }}
 
-# fix accumulo permissions in hdfs
-
-fix-accumulo-perms:
-  cmd.run:
-    - user: hdfs
-    - names:
-      - {{ hadoop.dfs_cmd }} -chown -R accumulo:accumulo /accumulo
-      - {{ hadoop.dfs_cmd }} -chmod -R 700 /accumulo
-      - {{ hadoop.dfs_cmd }} -chmod 750 /accumulo
-      - {{ hadoop.dfs_cmd }} -chmod 750 /accumulo/crypto
-      - {{ hadoop.dfs_cmd }} -chmod 750 /accumulo/instance_id
-    - require:
-      - cmd: init-accumulo
-
 {%- endif %}
