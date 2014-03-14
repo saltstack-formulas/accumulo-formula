@@ -6,9 +6,9 @@
 
 {%- if 'accumulo_master' in all_roles %}
 
-{{ hdfs_mkdir('/accumulo',      'accumulo', None, 700, hadoop.dfs_cmd) }}
+{{ hdfs_mkdir('/accumulo',      'accumulo', 'accumulo', 700, hadoop.dfs_cmd) }}
 {{ hdfs_mkdir('/user',          'hdfs',     None, 755, hadoop.dfs_cmd) }}
-{{ hdfs_mkdir('/user/accumulo', 'accumulo', None, 700, hadoop.dfs_cmd) }}
+{{ hdfs_mkdir('/user/accumulo', 'accumulo', 'accumulo', 700, hadoop.dfs_cmd) }}
 
 check-zookeeper:
   cmd.run:
