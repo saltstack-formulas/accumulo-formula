@@ -22,7 +22,6 @@ fix-accumulo-perms:
       - {{ hadoop.dfs_cmd }} -chmod 755 /accumulo/instance_id
       - {{ hadoop.dfs_cmd }} -chmod 750 /accumulo/crypto
       - {{ hadoop.dfs_cmd }} -chmod -R 700 /accumulo/tables
-      - {{ hadoop.dfs_cmd }} -chmod -R 700 /accumulo/wal
 
 {%- elif 'accumulo_slave' in salt['grains.get']('roles', []) %}
 
