@@ -20,8 +20,13 @@ fix-accumulo-perms:
       - {{ hadoop.dfs_cmd }} -chmod 755 /accumulo
       - {{ hadoop.dfs_cmd }} -chmod 755 /accumulo/version
       - {{ hadoop.dfs_cmd }} -chmod 755 /accumulo/instance_id
-      - {{ hadoop.dfs_cmd }} -chmod 750 /accumulo/crypto
       - {{ hadoop.dfs_cmd }} -chmod -R 700 /accumulo/tables
+
+fix-accumulo-crypto-perms:
+  cmd.run:
+    - user: hdfs
+    - name: {{ hadoop.dfs_cmd }} -chmod 750 /accumulo/crypto
+    - onlyif: {{ hadoop.dfs_cmd }} -test -d /accumulo/crypto
 
 {%- elif 'accumulo_slave' in salt['grains.get']('roles', []) %}
 
