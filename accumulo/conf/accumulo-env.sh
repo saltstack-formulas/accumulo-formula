@@ -69,6 +69,7 @@ MASTER_DBG="{{ salt['grains.get']('accumulo:config:debug_opts:master', '') }}"
 MONITOR_DBG="{{ salt['grains.get']('accumulo:config:debug_opts:monitor', '') }}"
 GC_DBG="{{ salt['grains.get']('accumulo:config:debug_opts:gc', '') }}"
 
+export ACCUMULO_MONITOR_BIND_ALL="true"
 export JMX_OPTS=" -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote -Djava.rmi.server.hostname=127.0.0.1"
 MASTER_OOM_OPTS="-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$ACCUMULO_LOG_DIR/master.hpro"
 TSERVER_OOM_OPTS="-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=$ACCUMULO_LOG_DIR/tserver.hpro"
