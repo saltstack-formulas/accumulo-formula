@@ -17,13 +17,13 @@
 #
 # Starts a accumulo thrift poxy
 #
-# chkconfig: 2345 85 15
+# chkconfig: 35 85 15
 # description: accumulo proxy
 #
 ### BEGIN INIT INFO
 # Provides:          accumulo-proxy
 # Short-Description: Accumulo Thrift Proxy
-# Default-Start:     2 3 4 5
+# Default-Start:     3 5
 # Default-Stop:      0 1 6
 # Required-Start:    $syslog $remote_fs
 # Required-Stop:     $syslog $remote_fs
@@ -57,7 +57,7 @@ PROC_NAME="java"
 APP_NAME="proxy"
 EXEC_PATH="{{ accumulo_prefix }}/bin/accumulo"
 DAEMON="accumulo-proxy"
-PIDFILE="/var/run/hadoop/${DAEMON}.pid"
+PIDFILE="/var/run/accumulo/${DAEMON}.pid"
 DESC="Accumulo Proxy"
 SVC_USER="accumulo"
 CONF_FILE="{{ accumulo_config }}/proxy.properties"
@@ -74,7 +74,7 @@ start() {
   [ -d $CONF_DIR ] || exit $ERROR_PROGRAM_NOT_CONFIGURED
   log_success_msg "Starting ${DESC}: "
 
-  su -s /bin/bash $SVC_USER -c "exec nohup $EXEC_PATH proxy -p '$CONF_FILE' 2>$ERR_LOGFILE 1>$LOGFILE &"
+  su - -s /bin/bash $SVC_USER -c "exec nohup $EXEC_PATH proxy -p '$CONF_FILE' 2>$ERR_LOGFILE 1>$LOGFILE &"
   sleep 1
   writepid
   checkstatusofproc
