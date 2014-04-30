@@ -38,12 +38,6 @@ make-accumulo-a-hadoop-user:
     - target: {{ accumulo.log_root }}
 {%- endif %}
 
-# replace any existing logdir (which would belong to root) if necessary
-{{ accumulo.real_home }}/logs:
-  file.symlink:
-    - target: /var/log/accumulo
-    - force: true
-
 {{ accumulo.userhome }}/.ssh:
   file.directory:
     - user: accumulo
@@ -184,3 +178,9 @@ accumulo-conf-link:
     - priority: 30
     - require:
       - file: {{ accumulo.real_config }}
+
+# replace any existing logdir (which would belong to root) if necessary
+{{ accumulo.real_home }}/logs:
+  file.symlink:
+    - target: /var/log/accumulo
+    - force: true
