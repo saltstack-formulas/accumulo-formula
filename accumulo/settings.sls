@@ -21,6 +21,9 @@
 {%- set uid            = g.get('uid', p.get('uid', default_uid)) %}
 {%- set version        = g.get('version', p.get('version', default_version)) %}
 {%- set prefix         = g.get('prefix', p.get('prefix', default_prefix)) %}
+# pssh is needed for the continuous testsuite
+# it is not available out of base or epel repos for redhat/centos
+{%- set pssh_rpm_source_url = g.get('pssh_rpm_source_url', p.get('pssh_rpm_source_url', ftp://fr2.rpmfind.net/linux/dag/redhat/el6/en/x86_64/dag/RPMS/pssh-2.3-1.el6.rf.noarch.rpm')) %}
 {%- set alt_home       = prefix %}
 
 {%- set default_url    = 'http://www.us.apache.org/dist/accumulo/' + version + '/accumulo-' + version + '-bin.tar.gz' %}
@@ -77,4 +80,5 @@
                           'sources': g.get('sources', p.get('sources', {})),
                           'worker_heap': worker_heap,
                           'mgr_heap': mgr_heap,
+                          'pssh_rpm_source_url': pssh_rpm_source_url,
                         }) %}

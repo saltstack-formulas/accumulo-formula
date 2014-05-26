@@ -76,7 +76,7 @@ pssh:
 {%- elif grains['os'] in ['CentOS'] %}
 install-pssh-directly:
   cmd.run:
-    - name: yum -y install ftp://fr2.rpmfind.net/linux/dag/redhat/el6/en/x86_64/dag/RPMS/pssh-2.3-1.el6.rf.noarch.rpm
+    - name: yum -y install {{ accumulo.pssh_rpm_source_url }}
     - unless: test -x /usr/bin/pssh
 {%- endif %}
 
