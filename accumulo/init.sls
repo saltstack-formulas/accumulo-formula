@@ -21,7 +21,6 @@ accumulo:
     - group: accumulo
     - makedirs: True
     - names:
-      - {{ accumulo.log_root }}
       - /var/run/accumulo
       - /var/lib/accumulo
 
@@ -32,7 +31,7 @@ make-accumulo-a-hadoop-user:
     - unless: id accumulo | grep hadoop
 
 # even if we end up using an alternative log path it would be nice to point to it from the default location
-{%- if accumulo.log_root != '/var/log/accumulo' %}
+{%- if accumulo.log_root != accumulo.default_log_root %}
 /var/log/accumulo:
   file.symlink:
     - target: {{ accumulo.log_root }}
@@ -178,6 +177,13 @@ accumulo-conf-link:
     - priority: 30
     - require:
       - file: {{ accumulo.real_config }}
+
+set-accumulo-logdir-permissions:
+  file.directory:
+    - name: {{ accumulo.log_root }}
+    - user: accumulo
+    - group: accumulo
+    - makedirs: True
 
 # replace any existing logdir (which would belong to root) if necessary
 {{ accumulo.real_home }}/logs:

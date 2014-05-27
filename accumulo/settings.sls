@@ -74,6 +74,7 @@
                           'walogs': walogs,
                           'accumulo_master' : accumulo_master,
                           'accumulo_slaves' : accumulo_slaves,
+                          'default_log_root': default_log_root,
                           'log_root': log_root,
                           'log_level' : log_level,
                           'memory_profile' : memory_profile,
