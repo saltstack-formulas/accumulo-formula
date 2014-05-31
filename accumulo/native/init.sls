@@ -1,5 +1,10 @@
 {%- from 'accumulo/settings.sls' import accumulo with context %}
 
+{%- if grains['os_family'] == 'RedHat' %}
+'gcc-c++':
+  pkg.installed
+{%- endif %}
+
 compile-accumulo-native-lib:
   cmd.run:
     - name: ./build_native_library.sh
