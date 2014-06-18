@@ -91,7 +91,7 @@ ssh_dss_accumulo:
 
 install-accumulo-dist:
   cmd.run:
-    - name: curl '{{ accumulo.source_url }}' | tar xz
+    - name: curl '{{ accumulo.source_url }}' | tar xz --no-same-owner
     - user: root
     - group: root
     - cwd: /usr/lib
@@ -110,13 +110,10 @@ accumulo-home-link:
     - user: root
     - group: root
 
-{{ accumulo.real_home }}:
+{{ accumulo.real_config }}:
   file.directory:
     - user: root
     - group: root
-    - recurse:
-      - user
-      - group
 
 /etc/accumulo:
   file.directory:
