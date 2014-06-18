@@ -124,7 +124,30 @@ accumulo-home-link:
     - group: root
     - mode: 755
 
-{{ accumulo.real_config }}:
+move-accumulo-dist-conf:
+  cmd.run:
+    - name: mv  {{ accumulo.real_config_src }} {{ accumulo.real_config_dist }}
+    - unless: test -L {{ accumulo.real_config_src }}
+    - onlyif: test -d {{ accumulo.real_config_src }}
+    - require:
+      - file: {{ accumulo.real_home }}
+      - file: /etc/accumulo
+
+{{ accumulo.real_config_src }}:
+  file.symlink:
+    - target: {{ accumulo.alt_config }}
+    - require:
+      - cmd: move-accumulo-dist-conf
+
+accumulo-conf-link:
+  alternatives.install:
+    - link: {{ accumulo.alt_config }}
+    - path: {{ accumulo.real_config }}
+    - priority: 30
+    - require:
+      - file: {{ accumulo.real_config }}
+
+{{ accumulo.alt_config }}:
   file.recurse:
     - source: salt://accumulo/conf
     - template: jinja
@@ -154,29 +177,6 @@ accumulo-home-link:
       secret: {{ accumulo.secret }}
       manual_worker_heap: {{ accumulo.worker_heap }}
       manual_mgr_heap: {{ accumulo.mgr_heap }}
-
-move-accumulo-dist-conf:
-  cmd.run:
-    - name: mv  {{ accumulo.real_config_src }} {{ accumulo.real_config_dist }}
-    - unless: test -L {{ accumulo.real_config_src }}
-    - onlyif: test -d {{ accumulo.real_config_src }}
-    - require:
-      - file: {{ accumulo.real_home }}
-      - file: /etc/accumulo
-
-{{ accumulo.real_config_src }}:
-  file.symlink:
-    - target: {{ accumulo.alt_config }}
-    - require:
-      - cmd: move-accumulo-dist-conf
-
-accumulo-conf-link:
-  alternatives.install:
-    - link: {{ accumulo.alt_config }}
-    - path: {{ accumulo.real_config }}
-    - priority: 30
-    - require:
-      - file: {{ accumulo.real_config }}
 
 set-accumulo-logdir-permissions:
   file.directory:
