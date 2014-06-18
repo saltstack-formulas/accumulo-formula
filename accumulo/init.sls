@@ -127,15 +127,10 @@ move-accumulo-dist-conf:
     - name: mv  {{ accumulo.real_config_src }} {{ accumulo.real_config_dist }}
     - unless: test -L {{ accumulo.real_config_src }}
     - onlyif: test -d {{ accumulo.real_config_src }}
-    - require:
-      - file: {{ accumulo.real_home }}
-      - file: /etc/accumulo
 
 {{ accumulo.real_config_src }}:
   file.symlink:
     - target: {{ accumulo.alt_config }}
-    - require:
-      - cmd: move-accumulo-dist-conf
 
 accumulo-conf-link:
   alternatives.install:
