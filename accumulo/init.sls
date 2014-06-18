@@ -114,6 +114,7 @@ accumulo-home-link:
   file.directory:
     - user: root
     - group: root
+    - makedirs: True
 
 /etc/accumulo:
   file.directory:
