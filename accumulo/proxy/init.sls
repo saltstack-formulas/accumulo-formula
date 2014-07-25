@@ -12,7 +12,7 @@
     - group: root
     - context:
       accumulo_instance: {{ accumulo.instance_name }}
-      zookeeper_host: {{ zk.zookeeper_host }}
+      zookeeper_connection_string: {{ zk.connection_string }}
       proxy_port: 50096
       proxy_max_framesize: 16M
 
