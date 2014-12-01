@@ -17,7 +17,7 @@
 HADOOP_PREFIX={{ hadoop_prefix }}
 ACCUMULO_HOME={{ accumulo_prefix }}
 JAVA_HOME={{ java_home }}
-ZOOKEEPER_HOME={{ zookeeper_prefix }}
+ZOOKEEPER_HOME={{ zookeeper_home }}
 
 CONTINUOUS_LOG_DIR={{ continuous_log_root }}
 INSTANCE_NAME={{ instance_name }}

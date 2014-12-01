@@ -154,7 +154,7 @@ accumulo-conf-link:
       hadoop_prefix: {{ hadoop.alt_home }}
       hadoop_config: {{ hadoop.alt_config }}
       alt_config: {{ accumulo.alt_config }}
-      zookeeper_prefix: {{ zk.prefix }}
+      zookeeper_home: {{ zk.alt_home }}
       accumulo_walogs: {{ accumulo.walogs }}
       accumulo_logs: {{ accumulo.log_root }}
       accumulo_loglevel: {{ accumulo.log_level }}

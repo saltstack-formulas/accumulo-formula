@@ -48,7 +48,7 @@ copy-testsuite:
     - context:
       accumulo_prefix: {{ accumulo.prefix }}
       hadoop_prefix: {{ hadoop.alt_home }}
-      zookeeper_prefix: {{ zk.prefix }}
+      zookeeper_home: {{ zk.alt_home }}
       java_home: {{ accumulo.java_home }}
       instance_name: {{ accumulo.instance_name }}
       zookeeper_host: {{ zk.zookeeper_host }}
