@@ -12,7 +12,7 @@
 
 check-zookeeper:
   cmd.run:
-    - name: {{ zk.prefix }}/bin/zkCli.sh -server {{ zk.zookeeper_host }}:{{zk.port}} ls / | tail -1 > /tmp/acc.status
+    - name: {{ zk.alt_home }}/bin/zkCli.sh -server {{ zk.zookeeper_host }}:{{zk.port}} ls / | tail -1 > /tmp/acc.status
     - env:
       - JAVA_HOME: {{ accumulo.java_home }}
 
