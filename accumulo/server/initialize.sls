@@ -10,17 +10,11 @@
 {{ hdfs_mkdir('/user',          'hdfs',     None, 755, hadoop.dfs_cmd) }}
 {{ hdfs_mkdir('/user/accumulo', 'accumulo', 'accumulo', 700, hadoop.dfs_cmd) }}
 
-check-zookeeper:
-  cmd.run:
-    - name: {{ zk.alt_home }}/bin/zkCli.sh -server {{ zk.zookeeper_host }}:{{zk.port}} ls / | tail -1 > /tmp/acc.status
-    - env:
-      - JAVA_HOME: {{ accumulo.java_home }}
-
 init-accumulo:
   cmd.run:
     - user: accumulo
     - name: {{accumulo.prefix}}/bin/accumulo init --instance-name {{ accumulo.instance_name }} --password {{ accumulo.secret }} > {{ accumulo.log_root }}/accumulo-init.log
-    - unless: grep -i accumulo /tmp/acc.status
+    - unless: {{ hadoop.dfs_cmd }} -ls /accumulo/instance_id
     - env:
       - ACCUMULO_HOME: {{ accumulo.alt_home }}
       - HADOOP_PREFIX: {{ hadoop.alt_home }}
