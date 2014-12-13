@@ -29,8 +29,7 @@
       accumulo_log_root: {{ accumulo.log_root }}
 
 accumulo-proxy:
-  service:
-    - running
+  service.running:
     - enable: True
 
 {%- endif %}
