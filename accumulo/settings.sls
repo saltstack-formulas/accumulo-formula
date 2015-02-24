@@ -60,7 +60,7 @@
 {%- if gc.get('tracer_flag', pc.get('tracer_flag', True)) %}
 {%- set accumulo_tracers = accumulo_master %}
 {%- else %}
-{%- set accumulo_tracers = '#' %}
+{%- set accumulo_tracers = '\# tracer was disabled in salt' %}
 {%- endif %}
 
 {%- set accumulo = {} %}
