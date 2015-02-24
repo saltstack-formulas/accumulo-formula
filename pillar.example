@@ -11,6 +11,7 @@ accumulo:
   config:
     instance_name: accumulo
     secret: secret
+    tracer_flag: True
     walogs: /var/lib/accumulo/walogs
     log_level: INFO # one of 'DEBUG', 'INFO', 'WARN', 'ERROR'
     log_root: /var/log/accumulo # only set if you have a small root partition or want to do accumulo debugging

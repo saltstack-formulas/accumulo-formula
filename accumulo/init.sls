@@ -166,6 +166,7 @@ accumulo-conf-link:
       hadoop_cdhmr1: {{ hadoop.cdhmr1 }}
       accumulo_master: {{ accumulo.accumulo_master }}
       accumulo_slaves: {{ accumulo.accumulo_slaves }}
+      accumulo_tracers: {{ accumulo.accumulo_tracers }}
       memory_profile: {{ accumulo.memory_profile }}
       secret: {{ accumulo.secret }}
       manual_worker_heap: {{ accumulo.worker_heap }}

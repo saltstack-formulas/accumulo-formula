@@ -56,6 +56,13 @@
 {%- set accumulo_master = salt['mine.get']('roles:accumulo_master', 'network.interfaces', 'grain').keys()|first() %}
 {%- set accumulo_slaves = salt['mine.get']('roles:accumulo_slave', 'network.interfaces', 'grain').keys() %}
 
+# make tracer processes optional
+{%- if gc.get('tracer_flag', pc.get('tracer_flag', True)) %}
+{%- set accumulo_tracers = accumulo_master %}
+{%- else %}
+{%- set accumulo_tracers = '#' %}
+{%- end %}
+
 {%- set accumulo = {} %}
 {%- do accumulo.update( { 'uid': uid,
                           'version' : version,
@@ -75,6 +82,7 @@
                           'walogs': walogs,
                           'accumulo_master' : accumulo_master,
                           'accumulo_slaves' : accumulo_slaves,
+                          'accumulo_tracers' : accumulo_tracers,
                           'default_log_root': default_log_root,
                           'log_root': log_root,
                           'log_level' : log_level,
