@@ -61,7 +61,7 @@
 {%- set accumulo_tracers = accumulo_master %}
 {%- else %}
 {%- set accumulo_tracers = '#' %}
-{%- end %}
+{%- endif %}
 
 {%- set accumulo = {} %}
 {%- do accumulo.update( { 'uid': uid,
