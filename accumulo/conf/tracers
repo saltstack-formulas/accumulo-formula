@@ -1,1 +1,1 @@
-{{ accumulo_tracers }}
+{{ accumulo_tracers | default("# disabled in salt", True) }}
