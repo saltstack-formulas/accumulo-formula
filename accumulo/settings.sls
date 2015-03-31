@@ -1,7 +1,7 @@
-{% set p  = salt['pillar.get']('accumulo', {}) %}
-{% set pc = p.get('config', {}) %}
-{% set g  = salt['grains.get']('accumulo', {}) %}
-{% set gc = g.get('config', {}) %}
+{% set p   = salt['pillar.get']('accumulo', {}) %}
+{% set pc  = p.get('config', {}) %}
+{% set g   = salt['grains.get']('accumulo', {}) %}
+{% set gc  = g.get('config', {}) %}
 
 {%- set userhome          = '/home/accumulo' %}
 {%- set default_uid       = '6040' %}
@@ -51,7 +51,7 @@
 {%- set real_config_src  = real_home + '/conf' %}
 {%- set real_config_dist = alt_config + '.dist' %}
 {%- set java_home        = salt['grains.get']('java_home', salt['pillar.get']('java_home', '/usr/lib/java')) %}
-
+{%- set env              = gc.get('accumulo-env', pc.get('accumulo-env', [])) %}
 
 {%- set accumulo_master = salt['mine.get']('roles:accumulo_master', 'network.interfaces', 'grain').keys()|first() %}
 {%- set accumulo_slaves = salt['mine.get']('roles:accumulo_slave', 'network.interfaces', 'grain').keys() %}
@@ -91,4 +91,5 @@
                           'worker_heap': worker_heap,
                           'mgr_heap': mgr_heap,
                           'pssh_rpm_source_url': pssh_rpm_source_url,
+                          'accumulo_env': env,
                         }) %}

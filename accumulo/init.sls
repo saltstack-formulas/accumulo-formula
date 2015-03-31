@@ -90,12 +90,16 @@ ssh_dss_accumulo:
         accumulo hard nproc 8092
 
 install-accumulo-dist:
-  cmd.run:
-    - name: curl '{{ accumulo.source_url }}' | tar xz --no-same-owner
+  file.directory:
+    - name: {{ accumulo.real_home }}
     - user: root
     - group: root
-    - cwd: /usr/lib
-    - unless: test -d {{ accumulo.alt_home }}
+  cmd.run:
+    - name: curl '{{ accumulo.source_url }}' | tar xz --no-same-owner --strip-components=1
+    - user: root
+    - group: root
+    - cwd: {{ accumulo.real_home }}
+    - unless: test -d {{ accumulo.real_home }}/lib
 
 accumulo-home-link:
   alternatives.install:
@@ -171,6 +175,7 @@ accumulo-conf-link:
       secret: {{ accumulo.secret }}
       manual_worker_heap: {{ accumulo.worker_heap }}
       manual_mgr_heap: {{ accumulo.mgr_heap }}
+      acc_env_list: {{ accumulo.accumulo_env }}
 
 set-accumulo-logdir-permissions:
   file.directory:

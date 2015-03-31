@@ -80,3 +80,8 @@ test -z "$ACCUMULO_GC_OPTS"      && export ACCUMULO_GC_OPTS="$GC_DBG $JMX_OPTS -
 test -z "$ACCUMULO_GENERAL_OPTS" && export ACCUMULO_GENERAL_OPTS="-XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75"
 test -z "$ACCUMULO_OTHER_OPTS"   && export ACCUMULO_OTHER_OPTS="-Xmx{{ worker_heap }} -Xms64m"
 export ACCUMULO_LOG_HOST=`(grep -v '^#' {{ alt_config }}/monitor ; echo localhost ) 2>/dev/null | head -1`
+
+{%- for line in acc_env_list %}
+{{ line }}
+{%- endfor %}
+
