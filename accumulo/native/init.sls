@@ -3,6 +3,9 @@
 {%- if grains['os_family'] == 'RedHat' %}
 'gcc-c++':
   pkg.installed
+{%- elif grains['os_family'] == 'Debian' %}
+'g++':
+  pkg.installed
 {%- endif %}
 
 compile-accumulo-native-lib:
